@@ -12,7 +12,7 @@ This is the code for the DraftBot Discord Bot used to play Rotissare Drafts.
    Keep in mind that these credentials should be treated as secrets.
 4. Set up your discord bot and discord bot token. The bot token should not
    be published and should be stored in your environment variables.
-5. Run Bot.py and enjoy.
+5. Run bot.py and enjoy.
 
 # Testing
 
