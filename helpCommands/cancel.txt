@@ -1,0 +1,10 @@
+```
+cancel
+
+Cancels the draft during setup provided no players
+have joined the draft. Players may leave the draft
+until it is empty to cancel the draft during setup.
+
+    example: !cancel
+    - The bot cancels the draft provided it is during
+      setup and no player have joined.```

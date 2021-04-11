@@ -1,0 +1,7 @@
+```
+leave
+
+Allows a user to leave the draft during the setup stage.
+
+    example: !leave
+    - The author of the command leaves the draft.```

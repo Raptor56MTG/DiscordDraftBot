@@ -1,0 +1,13 @@
+```edit_pick {new_number}
+
+Allows users to edit the number of picks in the draft
+while setting up. The draft must already be set up 
+and cannot be fired for this command to have effect.
+
+    new_number - must be a valid integer corresponding
+                 with it's attribute. 
+                
+                 45 <= pick_count <= 100
+
+    example: !edit_pick 50
+    - Updates the number of picks to be 50.```

@@ -1,0 +1,9 @@
+```
+pick {card}
+
+Allows a user to pick a card during the draft provided
+the draft has fired, they are the current drafter, and 
+the card has not been picked before.
+
+    example: !pick lightning bolt
+    - The drafter picks the card lightning bolt.```

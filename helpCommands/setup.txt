@@ -1,0 +1,9 @@
+```setup {player_count} {pick_count}
+
+Sets up a draft with a specified player and pick count.
+
+    player_count - must be between 2 and 8 inclusively.
+    pick_count - must be between 45 and 100 inclusively.
+
+    example: !setup 4 45
+    - Creates a draft with 4 players and 45 picks per player.```

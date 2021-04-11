@@ -1,0 +1,13 @@
+```edit_player {new_number}
+
+Allows users to edit the number of players in the draft 
+while setting up. The draft must already be set up and
+cannot be fired for this command to have effect.
+
+    new_number - must be a valid integer corresponding
+                 with it's attribute. 
+                
+                 2 <= player_count <= 8
+
+    example: !edit_player 6
+    - Updates the number of players to be 6.```

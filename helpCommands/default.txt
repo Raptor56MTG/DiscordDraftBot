@@ -1,0 +1,42 @@
+```I am DraftBot! I let you do custom rotisserie drafts.
+Here are my commands and their parameters:
+
+1. cancel
+    - Cancels the draft during setup if no one joined.
+
+2. card
+    - Displays the image of the card provided it exists.
+
+3. edit_pick
+    - Edit number of picks in the draft during setup.
+
+4. edit_player
+    - Edit number of players in the draft during setup.
+
+5. fire
+    - fires the draft once setup is complete.
+
+6. help
+    - Displays the helpful message you are currently seeing.
+
+7. info
+    - Displays information on the setup of the draft.
+
+8. join
+    - Allows a user to join a draft.
+
+9. leave
+    - Allows a user to leave the draft during the setup
+      stage.
+
+10. pick
+    - Allows a user to pick a card during the draft.
+
+11. remind
+    - reminds a user to pick a card when the draft
+      has fired and is running.
+
+12. setup
+    - Sets up a draft with a specified player and pick count.
+
+Type !help {command} for more info on a command.```

@@ -1,0 +1,10 @@
+```card {cardName} 
+
+Displays the image of the card provided it exists.
+
+    example: !card jace the mind sculptor
+    - You see an image of jace the mind sculptor
+    
+    example: !card wertyuiopoiuytr
+    - This card does not exist, so you get a message 
+      informing you that it does not exist.```

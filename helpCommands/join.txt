@@ -1,0 +1,8 @@
+```
+join
+
+Allows a user to join a draft provided it has not 
+fired and there is room.
+
+    example: !join
+    - The author of the command joins the draft.```

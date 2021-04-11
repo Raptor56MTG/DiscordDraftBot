@@ -1,0 +1,9 @@
+```
+fire
+
+Once the draft is setup and all the players have joined,
+this allows for the draft to be fired.
+
+    example: !fire
+    - The bot sets up the google doc and the drafting 
+      begins. Nothing can be altered at this point.```

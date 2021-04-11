@@ -1,0 +1,14 @@
+```remind {hour} {minute} {second}
+
+This allows a user to set a reminder for themselves.
+    
+    hour - must be between 0 and 48 inclusively.
+    minute - must be between 0 and 59 inclusively.
+    second - must be between 0 and 59 inclusively.
+
+    example: !remind 0 0 45
+    - The bot will @ the user in 45 seconds.
+      
+    example: !remind 24 5 45
+    - The bot will @ the user in 24 hours, 
+      5 minutes, and 45 seconds.```
