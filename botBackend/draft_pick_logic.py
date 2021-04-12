@@ -1,5 +1,6 @@
 import gspread
 from botBackend import scryfallapi 
+from botBackend import sheetapi
 
 class DraftPickLogic():
 
@@ -11,7 +12,6 @@ class DraftPickLogic():
 
         # combine the list + reverse for  [A, B, C] --> [A, B, C, C, B, A]
         self.players = players + players[::-1]
-
         self.active_player_index = 0
         self.picks_remaining = picks * len(players)
         self.card_tracker = CardTracker(players)
@@ -21,61 +21,71 @@ class DraftPickLogic():
         self.column = 2
 
         # list that tells the row and column pointer how to move after every pick.
-        self.row_update = ([0] * (len(players) - 1)) + [1] + ([0] * (len(players) - 1)) + [1]
-        self.column_update = ([1] * (len(players) - 1)) + [0] + [-1] * ((len(players) - 1)) + [0]
+        self.row_move = ([0] * (len(players) - 1)) + [1] + ([0] * (len(players) - 1)) + [1]
+        self.column_move = ([1] * (len(players) - 1)) + [0] + [-1] * ((len(players) - 1)) + [0]
      
-    def get_all_picks(self) -> list:
+    def valid_input(self, mention : str, card : tuple) -> bool:
+        
+        """This checks if the card and user are valid."""
 
-        """Returns a list of all of the current picks in the draft."""
-        return self.card_tracker.get_cards()
+        # invalid user 
+        if mention != self.players[self.active_player_index]:
+            return "You are not the active drafter. Please wait until it is your turn."
+        
+        # card does not exists
+        if not scryfallapi.card_exists(card):
+            return "This card does not exist."
+                        
+        # after using source of truth card was already picked    
+        if scryfallapi.get_fuzzied_correct(card) in self.card_tracker.get_cards():
+            return "That card has already been chosen. Please try again."
 
-    def pick(self, username : str, mention: str, card : tuple, sheet_api : object) -> str:
+        return "valid"
+
+    def pick(self, username : str, mention: str, card : tuple) -> str:
 
         """This functions as the pipeline for picking occurs.
         All others methods below are executed in series to execute a pick 
         in a proper fasion."""
 
-        # if they are not the active player
-        if mention != self.players[self.active_player_index]:
-            return "You are not the active drafter. Please wait until it is your turn."
+        # ensures valid input
+        valid = valid_input(mention, card)
+
+        if valid != "valid":
+            return valid_pick
+
+        # make the pick
+        self.card_tracker.add_card(mention, card_name)         
+        sheetapi.pick(card_name, self.row, self.column)
         
-        # otherwise, try to make a pick
-        else:
-            # see if card exists 
-            if scryfallapi.card_exists(card):
-                
-                # get the correct name to have a source of truth
-                card_name = scryfallapi.get_fuzzied_correct(card)
+        # pipeline to update
+        self.row_update()
+        self.column_update()
+        self.active_player_update()
+        self.picks_remaining_update()
+        
+        return username + " has chosen " + card_name + ". " + self.players[self.active_player_index] + " is up."
 
-                # see if it was already picked       
-                if card_name not in self.card_tracker.get_cards():
-                    
-                    # pick the card 
-                    self.card_tracker.add_card(mention, card_name) 
-                    
-                    # add card to sheets API
-                    sheet_api.pick(card_name, self.row, self.column)
-   
-                    # update position for next pick
-                    self.row += self.row_update[self.active_player_index]
-                    self.column += self.column_update[self.active_player_index]
+    #####################################
+    ###         PICK PIPELINE        ###
+    #####################################
 
-                    # update the active player index
-                    self.active_player_index = (self.active_player_index + 1) % len(self.players)
+    def row_update(self):
+        self.row += self.row_move[self.active_player_index]
 
-                    # decrease number of picks left in the draft
-                    self.picks_remaining -= 1
-                    
-                    return username + " has chosen " + card_name + ". " + self.players[self.active_player_index] + " is up."
-                else:
-                    return "That card has already been chosen. Please try again."
-            else:
-                return "This card does not exist."
+    def column_update(self):
+        self.column += self.column_move[self.active_player_index] 
+
+    def active_player_update(self):
+        self.active_player_index = (self.active_player_index + 1) % len(self.players)
+
+    def picks_remaining_update(self):
+        self.picks_remaining -= 1
 
 class CardTracker():
 
-    """This class acts as the data structure to track all of the cards.
-    Thi is just a dictionary of linked lists."""
+    """This class acts as the data structure to track 
+    all of the cards. This is just a dictionary of lists."""
 
     def __init__(self, players : list):
         
@@ -86,7 +96,7 @@ class CardTracker():
 
     def add_card(self, player : str, card_name : str):
 
-        """This adds a card to our dictionary of linked lists."""
+        """This adds a card to our dictionary of lists."""
 
         self.card_tracker[player].append(card_name)
 
