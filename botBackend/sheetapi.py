@@ -2,114 +2,79 @@ import gspread
 from decouple import config
 from gspread_formatting import CellFormat, Color, format_cell_range
 
-class SheetAPI():
+def setupSheet(players : list, picks : int):
+    
+    # grab the sheet object so we can use it
+    worksheet = __loadWorksheet()
 
-    def __init__(self, players : list, picks : int):
+    """this sets up default values for the sheet. 
+    This includes player names, pick count, and metadata
+    in case the session needs to be restarted down
+    the line"""
+    # setup draft pick numbers
+    __addDraftPicksIncrementer(worksheet, picks)
+    # setup location where metadata will be stored
+    __addMetaDataLocation(worksheet, picks)
+    # add the players to the sheet
+    __addPlayersToSheet(worksheet, players)
+    # adds colors to the columns
+    __addColorToColumns(worksheet, players, picks)
 
-        # take in a list of the players
-        self.players = players
+def __addDraftPicksIncrementer(worksheet : object, picks : int):
 
-        # number of cards players pick, if picks = 40 and 
-        # 6 players there are 240 picks in total
-        self.picks = picks
+    """ This adds an incrementer to the first column 
+    in the sheet for the total number of picks. If 
+    there are X picks for each player, then it will 
+    number cells (2,1) to (X, 1) from 1 to X.\n
+    (1,1)--> "Players"\n
+    (2,1) --> 1\n
+    (3,1) --> 2\n
+    (4,1) --> 3\n
+    (X,1) --> X-1\n   
+    Notation: (Row, Col)\n
+    Note: (1,1) is reserved for the word "Players" """
 
-        # grab the sheet object so we can use it
-        self.worksheet = self.__loadWorksheet()
+    row_player = 1
+    row_incrementer = 2
+    column = 1
 
-    #########################################
-    ##       LOAD SHEET WITH GSPREAD       ##
-    #########################################
+    # save word "player" to (1,1) square
+    worksheet.update_cell(row_player, column, "Players") 
 
-    def __loadWorksheet(self):
+    # number the first column starting at row 2
+    # from numbers 1 to n where n is the pick count
 
-        """this private method gets the worksheet in our google doc
-        so we can start performing operations on it"""
+    for i in range(picks):
+        worksheet.update_cell(i + row_incrementer, column, i + 1) # row column info
 
-        # load in the credentials file / json
-        serviceAccount = gspread.service_account(filename='credentials.json')
+def __addMetaDataLocation(worksheet : object, picks : int):
 
-        # grab the sheet I'm sharing by opening with the key in the url
-        sheet = serviceAccount.open_by_key(config('GOOGLE_SHEET_URL_KEY'))
+    """ This adds the location in the sheet where
+    the metadata will be stored. This is useful in 
+    case the bot stops working, or running. That way
+    it is possible to pick up from where we previously started. """
 
-        # grab the first sheet
-        worksheet = sheet.sheet1
+    #setup location to save metadata if bot stops running 
+    metaData = ["METADATA", "Player Count", "Player Names", "Current Picker", "Total Picks Made"]
+    row = picks + 1 + 5 # +1 is for shift, +5 to move it down five from the bottom of our column.
+    column = 1
+    for i in range(len(metaData)):
+        worksheet.update_cell(i + row, column, metaData[i])
 
-        return worksheet
+def __addPlayersToSheet(worksheet : object, players : list):
+    
+    """ This adds the names of the players drafting
+    to the sheet. """
 
-    #########################################
-    ##     SETUP BASIC LAYOUT OF SHEET     ##
-    #########################################
+    # row where names will be stored
+    row = 1
+    # shift over by 2 since index = 0 and we want to start at column 2
+    columnShift = 2
 
-    def setupSheet(self):
-        
-        """this sets up default values for the sheet. 
-        This includes player names, pick count, and metadata
-        in case the session needs to be restarted down
-        the line"""
-        # setup draft pick numbers
-        self.__addDraftPicksIncrementer()
-        # setup location where metadata will be stored
-        self.__addMetaDataLocation()
-        # add the players to the sheet
-        self.__addPlayersToSheet()
-        # adds colors to the columns
-        self.__addColorToColumns()
+    for i in range(len(players)):
+        worksheet.update_cell(row, i + columnShift, str(players[i])) # row / column
 
-    def __addDraftPicksIncrementer(self):
-
-        """ This adds an incrementer to the first column 
-        in the sheet for the total number of picks. If 
-        there are X picks for each player, then it will 
-        number cells (2,1) to (X, 1) from 1 to X.\n
-        (1,1)--> "Players"\n
-        (2,1) --> 1\n
-        (3,1) --> 2\n
-        (4,1) --> 3\n
-        (X,1) --> X-1\n   
-        Notation: (Row, Col)\n
-        Note: (1,1) is reserved for the word "Players" """
-
-        row_player = 1
-        row_incrementer = 2
-        column = 1
-
-        # save word "player" to (1,1) square
-        self.worksheet.update_cell(row_player, column, "Players") 
-
-        # number the first column starting at row 2
-        # from numbers 1 to n where n is the pick count
-
-        for i in range(self.picks):
-           self.worksheet.update_cell(i + row_incrementer, column, i + 1) # row column info
-
-    def __addMetaDataLocation(self):
-
-        """ This adds the location in the sheet where
-        the metadata will be stored. This is useful in 
-        case the bot stops working, or running. That way
-        it is possible to pick up from where we previously started. """
-
-        #setup location to save metadata if bot stops running 
-        metaData = ["METADATA", "Player Count", "Player Names", "Current Picker", "Total Picks Made"]
-        row = self.picks + 1 + 5 # + 1 is for shift, +5 is because we want it down 5 from the bottom of our column.
-        column = 1
-        for i in range(len(metaData)):
-            self.worksheet.update_cell(i + row, column, metaData[i])
-
-    def __addPlayersToSheet(self):
-        
-        """ This adds the names of the players drafting
-        to the sheet. """
-
-        # row where names will be stored
-        row = 1
-        # shift over by 2 since index = 0 and we want to start at column 2
-        columnShift = 2
-
-        for i in range(len(self.players)):
-            self.worksheet.update_cell(row, i + columnShift, str(self.players[i])) # row / column
-
-    def __addColorToColumns(self):
+def __addColorToColumns(worksheet : object, players : list, picks : int):
         
         """ This adds colors to the columns of the 
         players that are drafting. A unique color 
@@ -153,23 +118,37 @@ class SheetAPI():
         shift = 1
 
         # columns with row ranges for the card choices (up to 8 columns) 
-        cardColumns = ['B2:B' + str(self.picks + shift),'C2:C' + str(self.picks + shift),
-        'D2:D' + str(self.picks + shift),'E2:E' + str(self.picks + shift), 
-        'F2:F' + str(self.picks + shift),'G2:G' + str(self.picks + shift),
-        'H2:H' + str(self.picks + shift),'I2:I' + str(self.picks + shift)]
+        cardColumns = ['B2:B' + str(picks + shift),'C2:C' + str(picks + shift),
+        'D2:D' + str(picks + shift),'E2:E' + str(picks + shift), 
+        'F2:F' + str(picks + shift),'G2:G' + str(picks + shift),
+        'H2:H' + str(picks + shift),'I2:I' + str(picks + shift)]
 
-        for i in range(len(self.players)):
+        for i in range(len(players)):
             playerColor = CellFormat(backgroundColor=Color(colorPlayerNames[i][0], colorPlayerNames[i][1], colorPlayerNames[i][2]))
-            format_cell_range(self.worksheet, playerColumns[i], playerColor)
+            format_cell_range(worksheet, playerColumns[i], playerColor)
             cellColor = CellFormat(backgroundColor=Color(colorCardSlots[i][0], colorCardSlots[i][1], colorCardSlots[i][2]))
-            format_cell_range(self.worksheet, cardColumns[i], cellColor)
+            format_cell_range(worksheet, cardColumns[i], cellColor)
 
-    #########################################
-    ##       ADD A PICK TO THE SHEET       ##
-    #########################################
+def __loadWorksheet():
+
+    """this private method gets the worksheet in our google doc
+    so we can start performing operations on it"""
+
+    # load in the credentials file / json
+    serviceAccount = gspread.service_account(filename='credentials.json')
+
+    # grab the sheet I'm sharing by opening with the key in the url
+    sheet = serviceAccount.open_by_key(config('GOOGLE_SHEET_URL_KEY'))
+
+    # grab the first sheet
+    worksheet = sheet.sheet1
+
+    return worksheet
+
+def pick(card_name : str, row : int, column : int):
     
-    def pick(self, card_name : str, row : int, column : int):
-        
-        """ This adds the names of the players drafting
-        to the sheet. """
-        self.worksheet.update_cell(row, column, card_name)
+    worksheet = __loadWorksheet()
+
+    """ This adds the names of the players drafting
+    to the sheet. """
+    worksheet.update_cell(row, column, card_name)

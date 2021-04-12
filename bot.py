@@ -5,7 +5,7 @@ import random
 from decouple import config
 from discord.ext import commands
 from botBackend import scryfallapi
-from botBackend.sheetapi import SheetAPI
+from botBackend import sheetapi
 from botBackend import help_commands
 from botBackend import remind
 from botBackend.draft_setup_logic import DraftSetupLogic
@@ -18,7 +18,6 @@ from botBackend.draft_pick_logic import DraftPickLogic
 # imports to manage the draft.
 setup_logic = DraftSetupLogic()
 pick_logic = None
-sheet_api = None
 # initialize bot
 bot = commands.Bot(command_prefix="!")
 # remove the built in help command so I can write my own
@@ -95,7 +94,7 @@ async def fire_draft(ctx):
     
     """This fires the draft provided the setup is valid."""
     
-    global pick_logic, sheet_api
+    global pick_logic
 
     if not isinstance(ctx.channel, discord.channel.DMChannel):
 
@@ -116,9 +115,8 @@ async def fire_draft(ctx):
             random.shuffle(names_mentions) 
             player_names, mentions = zip(*names_mentions) 
 
-            # instantiate our sheet API passing in player names
-            sheet_api = SheetAPI(list(player_names), setup_logic.pick_count)
-            sheet_api.setupSheet()
+            # setup our sheet
+            sheetapi.setupSheet(list(player_names), setup_logic.pick_count)
 
             # instantiate pick logic using the mentions
             pick_logic = DraftPickLogic(list(mentions), setup_logic.pick_count)
@@ -245,12 +243,12 @@ async def remind_user(ctx, hours : str, minutes : str, seconds : str):
 @bot.command(aliases=['Pick'])
 async def pick(ctx, *card : str):
     
-    global pick_logic, sheet_api
+    global pick_logic
 
     if pick_logic:        
         username = ctx.message.author.name
         mention = ctx.author.mention
-        description = pick_logic.pick(username, mention, card, sheet_api)
+        description = pick_logic.pick(username, mention, card)
 
         # If the draft is over, reset these for the next one
         if pick_logic.picks_remaining == 0:           
