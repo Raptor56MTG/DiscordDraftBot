@@ -49,12 +49,13 @@ class DraftPickLogic():
         in a proper fasion."""
 
         # ensures valid input
-        valid = valid_input(mention, card)
+        valid = self.valid_input(mention, card)
 
         if valid != "valid":
-            return valid_pick
+            return valid
 
         # make the pick
+        card_name = scryfallapi.get_fuzzied_correct(card)
         self.card_tracker.add_card(mention, card_name)         
         sheetapi.pick(card_name, self.row, self.column)
         
