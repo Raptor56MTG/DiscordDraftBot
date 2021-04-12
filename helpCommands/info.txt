@@ -1,0 +1,7 @@
+```
+info
+
+This displays information on the setup of the draft.
+
+    example: !info
+    - Displays the setup of the draft before it fires.```
