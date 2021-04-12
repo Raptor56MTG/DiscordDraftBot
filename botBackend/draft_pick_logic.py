@@ -40,7 +40,7 @@ class DraftPickLogic():
         if scryfallapi.get_fuzzied_correct(card) in self.card_tracker.get_cards():
             return "That card has already been chosen. Please try again."
 
-        return "valid"
+        return None
 
     def pick(self, username : str, mention: str, card : tuple) -> str:
 
@@ -48,11 +48,11 @@ class DraftPickLogic():
         All others methods below are executed in series to execute a pick 
         in a proper fasion."""
 
-        # ensures valid input
-        valid = self.valid_input(mention, card)
+        # checks if input is invalid
+        invalid = self.valid_input(mention, card)
 
-        if valid != "valid":
-            return valid
+        if invalid:
+            return invalid
 
         # make the pick
         card_name = scryfallapi.get_fuzzied_correct(card)

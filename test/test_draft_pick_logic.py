@@ -124,7 +124,7 @@ class TestDraftPickLogic(unittest.TestCase):
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic(player_mentions, 45)
         actual = draft_pick_logic.valid_input('@1', ('Island',))
-        expected = "valid"
+        expected = None
         self.assertEqual(expected, actual)
 
     #####################################
