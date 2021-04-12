@@ -5,7 +5,9 @@ This is the code for the DraftBot Discord Bot used to play Rotissare Drafts.
 # Installation and Setup
 
 1. Clone the repository to your local machine.
-2. Run pipenv shell to create a environent that can run the code.
+2. Run pipenv shell to create a environent that can run the code. Afterwards run pipenv install 
+   to install the dependencies from the pipfile into this environment.
+
 3. You will need to create a credentials file for the google sheets API.
    A good tutorial on this topic can be seen here: https://www.youtube.com/watch?v=cnPlKLEGR7E. 
    
@@ -23,6 +25,3 @@ This is the code for the DraftBot Discord Bot used to play Rotissare Drafts.
 # Testing
 
 If you want to test the code, use 'python -m unittest'.
-
-
-
