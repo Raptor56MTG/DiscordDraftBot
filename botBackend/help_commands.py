@@ -2,9 +2,8 @@ def help_draft(command : str) -> str:
         
     """displays how to use each command for the bot."""
 
-    fileName = command.lower() + ".txt"
-
-    try: 
+    try:
+        fileName = command.lower() + ".txt" 
         help_text = open("helpCommands/" + fileName, "r")
     
         help_message = ""
