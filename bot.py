@@ -254,9 +254,9 @@ async def pick(ctx, *card : str):
         if pick_logic.picks_remaining == 0:           
             description = "Congrats! The draft has been finished! Please come and play again sometime."
             setup_logic.reset()
+            sheetapi.reset_sheet()
             pick_logic = None
-            sheet_api = None
-        
+
         embed = discord.Embed(description = description, colour = discord.Color.blue())
         await ctx.send(embed = embed) 
 

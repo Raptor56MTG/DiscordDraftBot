@@ -1,11 +1,11 @@
 import gspread
 from decouple import config
-from gspread_formatting import CellFormat, Color, format_cell_range
+from gspread_formatting import CellFormat, Color, format_cell_range, format_cell_ranges
 
 def setupSheet(players : list, picks : int):
     
     # grab the sheet object so we can use it
-    worksheet = __loadWorksheet()
+    worksheet = __load_worksheet()
 
     """this sets up default values for the sheet. 
     This includes player names, pick count, and metadata
@@ -67,35 +67,24 @@ def __add_color(worksheet : object, players : list, picks : int):
         # list of colors to add to columns for player names (max of 8)
         # this is RGB in range of (0 - 1) * 255
         # order of colors: 
-        # 0 - red - (248, 118, 118)
-        # 1 - turqiouse - (122, 240, 255)
-        # 2 - green - (132, 255, 187)
-        # 3 - yellow - (255, 226, 123)
-        # 4 - orange - (255, 142, 101)
-        # 5 - blue - (122, 170, 255)
-        # 6 - purple - (194, 167, 255)
-        # 7 - pink - (250, 133, 207)                                    
+        # 0 - red - (248, 118, 118) ------- (244, 204, 204)
+        # 1 - turqiouse - (122, 240, 255) ------- (224, 247, 250)
+        # 2 - green - (132, 255, 187) ------- (231, 249, 239)
+        # 3 - yellow - (255, 226, 123) ------- (254, 248, 227)
+        # 4 - orange - (255, 142, 101) ------- (255, 230, 221)
+        # 5 - blue - (122, 170, 255) ------- (232, 240, 254)
+        # 6 - purple - (194, 167, 255) ------- (222, 208, 253)
+        # 7 - pink - (250, 133, 207) ------- (248, 185, 225)                                   
         colorPlayerNames = [(248/255, 118/255, 118/255), (122/255, 240/255, 255/255), 
         (132/255, 255/255, 187/255), (255/255, 226/255, 123/255), (255/255, 142/255, 101/255), 
         (122/255, 170/255, 255/255), (194/255, 167/255, 255/255), (250/255, 133/255, 207/255)    ]
 
-        # columns on first row for player names (up to 8 columns) 
-        playerColumns = ['B1','C1','D1','E1','F1','G1','H1','I1']
-
-        # list of colors to add to columns for card choices (max of 8)
-        # this is RGB in range of (0 - 1) * 255
-        # order of colors: 
-        # 0 - red - (244, 204, 204)
-        # 1 - turqiouse - (224, 247, 250)
-        # 2 - green - (231, 249, 239)
-        # 3 - yellow - (254, 248, 227)
-        # 4 - orange - (255, 230, 221)
-        # 5 - blue - (232, 240, 254)
-        # 6 - purple - (222, 208, 253)
-        # 7 - pink - (248, 185, 225)                                       
         colorCardSlots = [(244/255, 204/255, 204/255), (224/255, 247/255, 250/255), 
         (231/255, 249/255, 239/255), (254/255, 248/255, 227/255), (255/255, 230/255, 221/255), 
         (232/255, 240/255, 254/255), (222/255, 208/255, 253/255), (248/255, 185/255, 225/255)]
+
+        # columns on first row for player names (up to 8 columns) 
+        playerColumns = ['B1','C1','D1','E1','F1','G1','H1','I1']
     
         # first row is player name, 2nd down is cards so we have a shift of 1
         shift = 1
@@ -136,8 +125,16 @@ def pick(card_name : str, row : int, column : int):
     to the sheet. """
     worksheet.update_cell(row, column, card_name)
 
-def clear_sheet():
+def reset_sheet():
 
     """This clears the data on the sheet so it can 
     be ready for the next draft."""
-    pass
+    
+    worksheet = __load_worksheet()
+    
+    # remove all values
+    worksheet.clear()
+
+    # remove color (set all to white)
+    fmt = CellFormat(backgroundColor=Color(1, 1, 1))
+    format_cell_ranges(worksheet, [('A:J', fmt)])
