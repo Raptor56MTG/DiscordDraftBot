@@ -11,16 +11,13 @@ def setupSheet(players : list, picks : int):
     This includes player names, pick count, and metadata
     in case the session needs to be restarted down
     the line"""
-    # setup draft pick numbers
-    __addDraftPicksIncrementer(worksheet, picks)
-    # setup location where metadata will be stored
-    __addMetaDataLocation(worksheet, picks)
-    # add the players to the sheet
-    __addPlayersToSheet(worksheet, players)
-    # adds colors to the columns
-    __addColorToColumns(worksheet, players, picks)
+    
+    # sheet setup pipeline
+    __add_picks_incrementer(worksheet, picks)
+    __add_players(worksheet, players)
+    __add_color(worksheet, players, picks)
 
-def __addDraftPicksIncrementer(worksheet : object, picks : int):
+def __add_picks_incrementer(worksheet : object, picks : int):
 
     """ This adds an incrementer to the first column 
     in the sheet for the total number of picks. If 
@@ -47,21 +44,7 @@ def __addDraftPicksIncrementer(worksheet : object, picks : int):
     for i in range(picks):
         worksheet.update_cell(i + row_incrementer, column, i + 1) # row column info
 
-def __addMetaDataLocation(worksheet : object, picks : int):
-
-    """ This adds the location in the sheet where
-    the metadata will be stored. This is useful in 
-    case the bot stops working, or running. That way
-    it is possible to pick up from where we previously started. """
-
-    #setup location to save metadata if bot stops running 
-    metaData = ["METADATA", "Player Count", "Player Names", "Current Picker", "Total Picks Made"]
-    row = picks + 1 + 5 # +1 is for shift, +5 to move it down five from the bottom of our column.
-    column = 1
-    for i in range(len(metaData)):
-        worksheet.update_cell(i + row, column, metaData[i])
-
-def __addPlayersToSheet(worksheet : object, players : list):
+def __add_players(worksheet : object, players : list):
     
     """ This adds the names of the players drafting
     to the sheet. """
@@ -74,7 +57,7 @@ def __addPlayersToSheet(worksheet : object, players : list):
     for i in range(len(players)):
         worksheet.update_cell(row, i + columnShift, str(players[i])) # row / column
 
-def __addColorToColumns(worksheet : object, players : list, picks : int):
+def __add_color(worksheet : object, players : list, picks : int):
         
         """ This adds colors to the columns of the 
         players that are drafting. A unique color 
@@ -129,7 +112,7 @@ def __addColorToColumns(worksheet : object, players : list, picks : int):
             cellColor = CellFormat(backgroundColor=Color(colorCardSlots[i][0], colorCardSlots[i][1], colorCardSlots[i][2]))
             format_cell_range(worksheet, cardColumns[i], cellColor)
 
-def __loadWorksheet():
+def __load_worksheet():
 
     """this private method gets the worksheet in our google doc
     so we can start performing operations on it"""
@@ -152,3 +135,9 @@ def pick(card_name : str, row : int, column : int):
     """ This adds the names of the players drafting
     to the sheet. """
     worksheet.update_cell(row, column, card_name)
+
+def clear_sheet():
+
+    """This clears the data on the sheet so it can 
+    be ready for the next draft."""
+    pass
