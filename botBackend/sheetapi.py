@@ -119,7 +119,7 @@ def __load_worksheet():
 
 def pick(card_name : str, row : int, column : int):
     
-    worksheet = __loadWorksheet()
+    worksheet = __load_worksheet()
 
     """ This adds the names of the players drafting
     to the sheet. """
