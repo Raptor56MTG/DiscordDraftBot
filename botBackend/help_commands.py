@@ -4,13 +4,12 @@ def help_draft(command : str) -> str:
 
     try:
         fileName = command.lower() + ".txt" 
-        help_text = open("helpCommands/" + fileName, "r")
-    
+       
         help_message = ""
-        for line in help_text:
-            help_message += line
+        with open("helpCommands/" + fileName, "r") as help_text: 
+            for line in help_text:
+                help_message += line
 
-        help_text.close()
         return help_message
 
     except FileNotFoundError as e:

@@ -7,8 +7,7 @@ def get_card_image(card : tuple) -> tuple:
 
     """This method returns the image of a card and the correct name.
     If the card does not exist, then it raises a value error.
-    Since scryfall uses a fuzzy API, you can misspell a card name
-    slightly and it will correct it and return the proper spelling. """
+    Scryfall uses a fuzzy API so minor misspelings are allowed."""
 
     card_url = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
     scryfall_json = requests.get(card_url)
@@ -25,8 +24,7 @@ def get_card_legality(card : tuple) -> tuple:
     
     """This method returns the legality of a card and the correct name.
     If the card does not exist, then it raises a value error.
-    Since scryfall uses a fuzzy API, you can misspell a card name
-    slightly and it will correct it and return the proper spelling."""
+    Scryfall uses a fuzzy API so minor misspelings are allowed."""
 
     cardURL = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
     scryfall_json = requests.get(cardURL)
