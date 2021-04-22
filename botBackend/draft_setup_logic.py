@@ -118,7 +118,7 @@ class DraftSetupLogic():
                     "finished before starting another draft.")
 
         elif self.setup: 
-            return "The draft setup has already been completed. To modify the setup use: !edit"
+            return "The draft setup has already been completed. To modify the setup use the edit commands."
 
         # Invalid input (invalid value, or out of bounds) 
         elif (not pick_count.isdigit() or not player_count.isdigit() or
