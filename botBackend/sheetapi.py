@@ -3,14 +3,12 @@ from decouple import config
 from gspread_formatting import CellFormat, Color, format_cell_range, format_cell_ranges
 
 def setupSheet(players : list, picks : int):
-    
+
+    """Sets up default values for the sheet. 
+    This includes player names, pick count, and color."""
+
     # grab the sheet object so we can use it
     worksheet = __load_worksheet()
-
-    """this sets up default values for the sheet. 
-    This includes player names, pick count, and metadata
-    in case the session needs to be restarted down
-    the line"""
     
     # sheet setup pipeline
     __add_picks_incrementer(worksheet, picks)
@@ -19,7 +17,7 @@ def setupSheet(players : list, picks : int):
 
 def __add_picks_incrementer(worksheet : object, picks : int):
 
-    """ This adds an incrementer to the first column 
+    """Adds an incrementer to the first column 
     in the sheet for the total number of picks. If 
     there are X picks for each player, then it will 
     number cells (2,1) to (X, 1) from 1 to X.\n
@@ -29,7 +27,7 @@ def __add_picks_incrementer(worksheet : object, picks : int):
     (4,1) --> 3\n
     (X,1) --> X-1\n   
     Notation: (Row, Col)\n
-    Note: (1,1) is reserved for the word "Players" """
+    Note: (1,1) is reserved for the word 'Players'"""
 
     row_player = 1
     row_incrementer = 2
@@ -46,8 +44,7 @@ def __add_picks_incrementer(worksheet : object, picks : int):
 
 def __add_players(worksheet : object, players : list):
     
-    """ This adds the names of the players drafting
-    to the sheet. """
+    """Add the names of the players to the sheet."""
 
     # row where names will be stored
     row = 1
@@ -59,10 +56,10 @@ def __add_players(worksheet : object, players : list):
 
 def __add_color(worksheet : object, players : list, picks : int):
         
-        """ This adds colors to the columns of the 
+        """This adds colors to the columns of the 
         players that are drafting. A unique color 
         is added to the player name and a second is 
-        added to their card choices. """
+        added to their card choices."""
 
         # list of colors to add to columns for player names (max of 8)
         # this is RGB in range of (0 - 1) * 255
@@ -103,8 +100,8 @@ def __add_color(worksheet : object, players : list, picks : int):
 
 def __load_worksheet():
 
-    """this private method gets the worksheet in our google doc
-    so we can start performing operations on it"""
+    """Gets the worksheet in our google doc
+    so we can start performing operations on it."""
 
     # load in the credentials file / json
     serviceAccount = gspread.service_account(filename='credentials.json')
@@ -119,7 +116,7 @@ def __load_worksheet():
 
 def pick(card_name : str, row : int, column : int):
 
-    """ adds pick to the sheet"""
+    """Adds pick to the sheet."""
 
     worksheet = __load_worksheet()
     worksheet.update_cell(row, column, card_name)
