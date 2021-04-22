@@ -49,14 +49,10 @@ def card_exists(card : tuple) -> bool:
     
 def get_fuzzied_correct(card : tuple) -> str:
 
-    """This returns the correct spelling of a card using
-    scryfalls fuzzy API. If the user enters 'lightning balt', 
-    scryfall will realize they meant 'lightning bolt'. 
-    This ensures two people can't pick the same card with 
-    slightly different spellings. We use whatever scryfall 
-    returns as the source of truth. This method should only 
-    be used when the card_exists method is called before as 
-    it assumes the card does exist."""
+    """Returns the correct spelling of a card using
+    the fuzzy API. (Example: 'lightning balt' --> 'lightning bolt')
+    Scryfall acts as the source of truth. This should only be used after 
+    calling card_exists as it assumes the card exist."""
 
     cardURL = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
     scryfall_json = requests.get(cardURL)

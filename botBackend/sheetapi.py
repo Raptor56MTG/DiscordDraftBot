@@ -118,11 +118,10 @@ def __load_worksheet():
     return worksheet
 
 def pick(card_name : str, row : int, column : int):
-    
-    worksheet = __load_worksheet()
 
-    """ This adds the names of the players drafting
-    to the sheet. """
+    """ adds pick to the sheet"""
+
+    worksheet = __load_worksheet()
     worksheet.update_cell(row, column, card_name)
 
 def reset_sheet():
