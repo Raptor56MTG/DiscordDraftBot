@@ -1,8 +1,6 @@
 import requests
 import math
 
-""" This makes requests to the scryfall API to get cards and images."""
-
 def get_card_image(card : tuple) -> tuple:
 
     """This method returns the image of a card and the correct name.
