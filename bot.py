@@ -8,6 +8,7 @@ from botBackend import scryfallapi
 from botBackend import sheetapi
 from botBackend import help_commands
 from botBackend import remind
+from botBackend import screenshot
 from botBackend.draft_setup_logic import DraftSetupLogic
 from botBackend.draft_pick_logic import DraftPickLogic
 
@@ -245,25 +246,33 @@ async def pick(ctx, *card : str):
     
     global pick_logic
 
-    if pick_logic:        
-        username = ctx.message.author.name
-        mention = ctx.author.mention
-        description = pick_logic.pick(username, mention, card)
+    if not isinstance(ctx.channel, discord.channel.DMChannel):
 
-        # If the draft is over, reset these for the next one
-        if pick_logic.picks_remaining == 0:           
-            description = "Congrats! The draft has been finished! Please come and play again sometime."
-            setup_logic.reset()
-            sheetapi.reset_sheet()
-            pick_logic = None
+        if pick_logic:        
+            username = ctx.message.author.name
+            mention = ctx.author.mention
+            description = pick_logic.pick(username, mention, card)
 
-        embed = discord.Embed(description = description, colour = discord.Color.blue())
-        await ctx.send(embed = embed) 
+            # If the draft is over, take a picture then reset it for the next one
+            if pick_logic.picks_remaining == 0:                                   
+                await ctx.send("The Draft has been finished. Decks and pictures will arrive shortly.") 
+                screenshot.take_screenshot()
+                with open('completed_draft.png', 'rb') as f:
+                    picture = discord.File(f)
+                    await ctx.send(file=picture)
+                
+                description = "Congrats! The draft has been finished! Please come and play again sometime."
+                setup_logic.reset()
+                sheetapi.reset_sheet()
+                pick_logic = None
 
-    else:
-        description = "You cannot make picks until the draft has fired."
-        embed = discord.Embed(description = description, colour = discord.Color.blue())
-        await ctx.send(embed = embed)
+            embed = discord.Embed(description = description, colour = discord.Color.blue())
+            await ctx.send(embed = embed) 
+
+        else:
+            description = "You cannot make picks until the draft has fired."
+            embed = discord.Embed(description = description, colour = discord.Color.blue())
+            await ctx.send(embed = embed)
 
 ##########################################
 ###             RUN THE BOT            ###
