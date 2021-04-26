@@ -7,11 +7,8 @@ def get_card_image(card : tuple) -> tuple:
     If the card does not exist, then it raises a value error.
     Scryfall uses a fuzzy API so minor misspelings are allowed."""
 
-    session = requests.Session()
     card_url = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
-    scryfall_json = session.get(card_url)
-    session.close()
-    
+    scryfall_json = requests.get(card_url)
     object_type = scryfall_json.json()["object"]
 
     if object_type == "error":
@@ -27,11 +24,8 @@ def get_card_legality(card : tuple) -> tuple:
     If the card does not exist, then it raises a value error.
     Scryfall uses a fuzzy API so minor misspelings are allowed."""
 
-    session = requests.Session()
-    card_url = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
-    scryfall_json = session.get(card_url)
-    session.close()
-
+    cardURL = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
+    scryfall_json = requests.get(cardURL)
     object_type = scryfall_json.json()["object"]
 
     if object_type == "error":
@@ -45,12 +39,10 @@ def card_exists(card : tuple) -> bool:
 
     """Determines if a card exists."""
 
-    session = requests.Session()
     card_url = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
-    scryfall_json = session.get(card_url)
-    session.close()
-
+    scryfall_json = requests.get(card_url)
     object_type = scryfall_json.json()["object"]
+
     return object_type != "error"
     
 def get_fuzzied_correct(card : tuple) -> str:
@@ -60,11 +52,8 @@ def get_fuzzied_correct(card : tuple) -> str:
     Scryfall acts as the source of truth. This should only be used after 
     calling card_exists as it assumes the card exist."""
 
-    session = requests.Session()
-    card_url = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
-    scryfall_json = session.get(card_url)
-    session.close()
-
+    cardURL = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
+    scryfall_json = requests.get(cardURL)
     card_name = scryfall_json.json()["name"]
     return card_name
     
