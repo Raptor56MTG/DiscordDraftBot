@@ -1,0 +1,10 @@
+```legal {cardName} 
+
+Displays legality of a card provided it exists.
+
+    example: !legal gush
+    - You see the legality of gush
+    
+    example: !card wertyuiopoiuytr
+    - This card does not exist, so you get a message 
+      informing you that it does not exist.```

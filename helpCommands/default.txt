@@ -29,14 +29,17 @@ Here are my commands and their parameters:
     - Allows a user to leave the draft during the setup
       stage.
 
-10. pick
+10. legal
+    - States the legality of a card.
+
+11. pick
     - Allows a user to pick a card during the draft.
 
-11. remind
+12. remind
     - reminds a user to pick a card when the draft
       has fired and is running.
 
-12. setup
+13. setup
     - Sets up a draft with a specified player and pick count.
 
 Type !help {command} for more info on a command.```

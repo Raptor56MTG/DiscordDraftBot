@@ -32,12 +32,14 @@ class TestHelpCommands(unittest.TestCase):
                     "9. leave\n" +
                     "    - Allows a user to leave the draft during the setup\n" +
                     "      stage.\n\n" +
-                    "10. pick\n" +
+                    "10. legal\n" + 
+                    "    - States the legality of a card.\n\n" +
+                    "11. pick\n" +
                     "    - Allows a user to pick a card during the draft.\n\n" +
-                    "11. remind\n" +
+                    "12. remind\n" +
                     "    - reminds a user to pick a card when the draft\n" +
                     "      has fired and is running.\n\n" + 
-                    "12. setup\n" +
+                    "13. setup\n" +
                     "    - Sets up a draft with a specified player and pick count.\n\n" +
                     "Type !help {command} for more info on a command.```")
         
