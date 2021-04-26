@@ -8,25 +8,48 @@ class DraftPickLogic():
     they can be called easily without having to open the sheet. It acts as 
     the CLI of the draft."""
 
-    def __init__(self, players : list, picks : int):
+    def __init__(self):
+
+        # the draft is not fired until we call the fire method
+        self.fired = False
+
+        # these are null until the draft has been fired.
+        self.players = None
+        self.picks_remaining = None
+        self.card_tracker = None
+        self.row_move = None
+        self.column_move = None
+
+        # default starting points for our sheet draft
+        self.active_player_index = 0
+        self.row = 2
+        self.column = 2
+
+    def fire_draft(self, players : list, picks : int):
+        
+        """This fires the picks portion of the draft so users
+        can start picking cards. It also updates our variables
+        to usable values."""
+
+        # fire the draft
+        self.fired = True
 
         # combine the list + reverse for  [A, B, C] --> [A, B, C, C, B, A]
         self.players = players + players[::-1]
-        self.active_player_index = 0
         self.picks_remaining = picks * len(players)
         self.card_tracker = CardTracker(players)
-
-        # starting points for our sheet draft
-        self.row = 2
-        self.column = 2
 
         # list that tells the row and column pointer how to move after every pick.
         self.row_move = ([0] * (len(players) - 1)) + [1] + ([0] * (len(players) - 1)) + [1]
         self.column_move = ([1] * (len(players) - 1)) + [0] + [-1] * ((len(players) - 1)) + [0]
-     
+
     def valid_input(self, mention : str, card : tuple) -> bool:
         
         """This checks if the card and user are valid."""
+
+        # draft has not been fired
+        if not self.fired:
+            return "You cannot make picks until the draft has fired."
 
         # invalid user 
         if mention != self.players[self.active_player_index]:
@@ -41,6 +64,16 @@ class DraftPickLogic():
             return "That card has already been chosen. Please try again."
 
         return None
+
+    def reset(self):
+
+        """This resets all values once a draft has finished."""
+        self.fired = False
+        self.players = None
+        self.picks_remaining = None
+        self.card_tracker = None
+        self.row_move = None
+        self.column_move = None
 
     def pick(self, username : str, mention: str, card : tuple) -> str:
 
@@ -65,7 +98,10 @@ class DraftPickLogic():
         self.active_player_update()
         self.picks_remaining_update()
         
-        return username + " has chosen " + card_name + ". " + self.players[self.active_player_index] + " is up."
+        if self.picks_remaining > 0:
+            return username + " has chosen " + card_name + ". " + self.players[self.active_player_index] + " is up."
+        else:
+            return "Congrats! The draft has been finished! Please come and play again sometime."
 
     #####################################
     ###         PICK PIPELINE        ###
