@@ -143,16 +143,13 @@ class DraftSetupPickCommands(commands.Cog):
             # take a picture then reset it for the next one.
             if self.pick_logic.fired and self.pick_logic.picks_remaining == 0:                                   
                 
-                # inform users the draft is over.
                 await ctx.send("The Draft has been finished. Decks and pictures will arrive shortly.") 
                 
-                # take the picture
                 take_screenshot()
                 with open('completed_draft.png', 'rb') as f:
                     picture = discord.File(f)
                     await ctx.send(file=picture)
                                     
-                # reset all values for the next draft
                 self.setup_logic.reset()
                 self.pick_logic.reset()
                 sheetapi.reset_sheet()
