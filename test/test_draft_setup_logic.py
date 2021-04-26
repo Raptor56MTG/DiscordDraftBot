@@ -310,7 +310,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         logic = DraftSetupLogic()
         logic.setup_draft("4","45")
         actual = logic.setup_draft("4","45")
-        expected = "The draft setup has already been completed. To modify the setup use: !edit"
+        expected = "The draft setup has already been completed. To modify the setup use the edit commands."
         self.assertEqual(actual, expected)
 
     def test_setup_draft_invalid_input_1(self):

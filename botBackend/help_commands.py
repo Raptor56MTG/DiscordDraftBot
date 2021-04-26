@@ -12,6 +12,6 @@ def help_draft(command : str) -> str:
 
         return help_message
 
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         return "No command found."
             
