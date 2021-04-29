@@ -74,7 +74,7 @@ class DraftSetupLogic():
             return "Please ensure that the draft is full."
         else:
             self.draft_fired = True
-            return ("The draft has fired and is currently being set up." +
+            return ("The draft has fired and is currently being set up. " +
                     "All other commands are disabled until sheet setup is complete.")
 
     def join_draft(self, username: str, mention: str) -> str:
@@ -119,7 +119,7 @@ class DraftSetupLogic():
                     "finished before starting another draft.")
 
         elif self.setup:
-            return ("The draft setup has already been completed." +
+            return ("The draft setup has already been completed. " +
                     "To modify the setup use the edit commands.")
 
         # Invalid input (invalid value, or out of bounds)
