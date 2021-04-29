@@ -4,7 +4,6 @@ import random
 from decouple import config
 import sys
 sys.path.append('..')
-
 from botBackend.draft_setup_logic import DraftSetupLogic
 from botBackend.draft_pick_logic import DraftPickLogic
 from botBackend import sheetapi
