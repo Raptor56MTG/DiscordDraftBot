@@ -56,6 +56,40 @@ class DraftPickLogic():
         self.row_move = None
         self.column_move = None
 
+    def pick(self, username: str, mention: str, card: tuple) -> str:
+
+        """This functions as the pipeline for picking occurs.
+        All others methods below are executed in series to execute a pick
+        in a proper fasion."""
+
+        # make our one off call to scryfall to get the json
+        card_json = scryfallapi.get_scryfall_json(card)
+
+        # if input is invalid then break and inform the user
+        invalid = self.invalid_input(mention, card_json)
+        if invalid:
+            return invalid
+
+        # otherwise if valid make the pick
+        self.card_tracker.add_card(mention, card_json["name"])
+        sheetapi.pick(card_json["name"], self.row, self.column)
+
+        # pipeline to update after pick
+        self.row_update()
+        self.column_update()
+        self.active_player_update()
+        self.picks_remaining_update()
+
+        if self.picks_remaining > 0:
+            return (f'{username} has chosen {card_json["name"]}. ' +
+                    f'{self.players[self.active_player_index]} is up.')
+        else:
+            return "Congrats! The draft has been finished! Please come and play again sometime."
+
+    ##############################
+    ##    PICK PIPELINE BELOW   ##
+    ##############################
+
     def invalid_input(self, mention: str, card_json: dict) -> bool:
 
         """This checks if the input is invalid."""
@@ -78,37 +112,6 @@ class DraftPickLogic():
             return "That card has already been chosen. Please try again."
 
         return None
-
-    def pick(self, username: str, mention: str, card: tuple) -> str:
-
-        """This functions as the pipeline for picking occurs.
-        All others methods below are executed in series to execute a pick
-        in a proper fasion."""
-
-        # make our one off call to scryfall to get the json
-        card_json = scryfallapi.get_scryfall_json(card)
-
-        # if input is invalid then break and inform the user
-        invalid = self.invalid_input(mention, card_json)
-        if invalid:
-            return invalid
-
-        # otherwise if valid make the pick
-        card_name = card_json["name"]
-        self.card_tracker.add_card(mention, card_name)
-        sheetapi.pick(card_name, self.row, self.column)
-
-        # pipeline to update after pick
-        self.row_update()
-        self.column_update()
-        self.active_player_update()
-        self.picks_remaining_update()
-
-        if self.picks_remaining > 0:
-            return (username + " has chosen " + card_name + ". "
-                    + self.players[self.active_player_index] + " is up.")
-        else:
-            return "Congrats! The draft has been finished! Please come and play again sometime."
 
     def row_update(self):
         self.row += self.row_move[self.active_player_index]

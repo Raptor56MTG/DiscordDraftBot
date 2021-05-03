@@ -135,7 +135,7 @@ class DraftSetupPickCommands(commands.Cog):
                     await ctx.send(embed=embed)
 
                     # notify the first drafter it is their turn to draft
-                    await ctx.send(list(mentions)[0] + " it is your turn to pick!")
+                    await ctx.send(f"{list(mentions)[0]} it is your turn to pick!")
 
     @commands.command(aliases=['Pick'])
     async def pick(self, ctx, *card: str):

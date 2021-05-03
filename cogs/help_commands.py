@@ -20,7 +20,7 @@ class HelpCommands(commands.Cog):
 
         # use embed discord styling for nicer display
         embed = discord.Embed(
-            title="How to use: " + command if command != "default" else "How to use me",
+            title=f"How to use: {command}" if command != "default" else "How to use me",
             description=help_commands.help_draft(command),
             colour=discord.Color.blue()
         )

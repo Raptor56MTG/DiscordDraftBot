@@ -35,9 +35,9 @@ class ScryfallCommands(commands.Cog):
         try:
             # get the url and card name from the API call
             card_name, legality_json = scryfallapi.get_card_legality(card)
-            embed = discord.Embed(title=card_name + " Legality", colour=discord.Color.blue())
+            embed = discord.Embed(title=f"{card_name} Legality", colour=discord.Color.blue())
             for legality in legality_json:
-                embed.add_field(name="**" + legality + "**",
+                embed.add_field(name=f"**{legality}**",
                                 value=legality_json[legality],
                                 inline=True)
             await ctx.send(embed=embed)
