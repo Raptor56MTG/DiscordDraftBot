@@ -6,7 +6,7 @@ def help_draft(command: str) -> str:
         fileName = f"{command.lower()}.txt"
 
         help_message = ""
-        with open("helpCommands/" + fileName, "r") as help_text:
+        with open(f"helpCommands/{fileName}", "r") as help_text:
             for line in help_text:
                 help_message += line
 

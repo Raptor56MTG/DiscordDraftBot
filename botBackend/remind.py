@@ -6,6 +6,7 @@ def notify(hours: str, minutes: str, seconds: str) -> str:
     """Notifies the user they will be reminded after their
     inputted amount of time has passed. This should only be
     called after the input is validated."""
+
     h = f'{int(hours)} hours, ' if hours != "1" else f'{int(hours)} hour, '
     m = f'{int(minutes)} minutes, and ' if minutes != "1" else f'{int(minutes)} minute, and '
     s = f'{int(seconds)} seconds.' if seconds != "1" else f'{int(seconds)} second.'
