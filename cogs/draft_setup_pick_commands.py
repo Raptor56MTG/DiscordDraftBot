@@ -106,8 +106,8 @@ class DraftSetupPickCommands(commands.Cog):
                                       colour=discord.Color.blue())
                 await ctx.send(embed=embed)
 
-            # otherwise attempt to fire
             else:
+                # attempt to fire
                 output = self.setup_logic.fire_draft()
                 embed = discord.Embed(description=output, colour=discord.Color.blue())
                 await ctx.send(embed=embed)
@@ -150,11 +150,13 @@ class DraftSetupPickCommands(commands.Cog):
             mention = ctx.author.mention
             description = self.pick_logic.pick(username, mention, card)
 
-            # if the draft has been fired and there are no ore picks to make,
+            # if the draft has been fired and there are no more picks to make,
             # take a picture then reset it for the next one.
             if self.pick_logic.fired and self.pick_logic.picks_remaining == 0:
 
                 await ctx.send("Draft has been finished. Decks and pictures will arrive shortly.")
+
+                await self.generate_text_files(ctx)
 
                 take_screenshot()
                 with open('completed_draft.png', 'rb') as f:
@@ -167,6 +169,27 @@ class DraftSetupPickCommands(commands.Cog):
 
             embed = discord.Embed(description=description, colour=discord.Color.blue())
             await ctx.send(embed=embed)
+
+    async def generate_text_files(self, ctx):
+
+        """This generates the text file for the users. I am not a fan
+        of having this logic outside of the  pick logic, but it is what
+        it is."""
+
+        for player in self.pick_logic.card_tracker.card_tracker:
+
+            # populate the text file with their deck
+            with open("deck.txt", "w") as file:
+                for card in self.pick_logic.card_tracker.card_tracker[player]:
+                    file.write(f"1 {card}\n")
+
+            # send them their text file
+            with open("deck.txt", "rb") as file:
+                await ctx.send(f"{player}'s deck", file=discord.File(file, "rotissare_deck.txt"))
+
+            # clear the text file so we can refill it with the next deck.
+            with open('deck.txt', 'w'):
+                pass
 
 
 def setup(bot):

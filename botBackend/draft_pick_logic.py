@@ -29,7 +29,10 @@ class DraftPickLogic():
 
         """This fires the picks portion of the draft so users
         can start picking cards. It also updates our variables
-        to usable values."""
+        to usable values. Note that players is not the players
+        names, but their unique user id. This allows the @user
+        in discord to be functional and deals with users having
+        the same name."""
 
         # fire the draft
         self.fired = True
@@ -42,6 +45,16 @@ class DraftPickLogic():
         # list that tells the row and column pointer how to move after every pick.
         self.row_move = ([0] * (len(players) - 1)) + [1] + ([0] * (len(players) - 1)) + [1]
         self.column_move = ([1] * (len(players) - 1)) + [0] + [-1] * ((len(players) - 1)) + [0]
+
+    def reset(self):
+
+        """This resets all values once a draft has finished."""
+        self.fired = False
+        self.players = None
+        self.picks_remaining = None
+        self.card_tracker = None
+        self.row_move = None
+        self.column_move = None
 
     def valid_input(self, mention: str, card: tuple) -> bool:
 
@@ -64,16 +77,6 @@ class DraftPickLogic():
             return "That card has already been chosen. Please try again."
 
         return None
-
-    def reset(self):
-
-        """This resets all values once a draft has finished."""
-        self.fired = False
-        self.players = None
-        self.picks_remaining = None
-        self.card_tracker = None
-        self.row_move = None
-        self.column_move = None
 
     def pick(self, username: str, mention: str, card: tuple) -> str:
 
