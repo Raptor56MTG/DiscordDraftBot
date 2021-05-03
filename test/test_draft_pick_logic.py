@@ -89,57 +89,57 @@ class TestDraftPickLogic(unittest.TestCase):
     ###       VALID INPUT TESTS       ###
     #####################################
 
-    def test_valid_input_not_active_player(self):
+    def test_invalid_input_not_active_player(self):
 
-        """Tests valid input with player who went out of order"""
+        """Tests invalid input with player who went out of order"""
 
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
         draft_pick_logic.fire_draft(player_mentions, 45)
-        actual = draft_pick_logic.valid_input('@2', ('Lightning Bolt',))
+        actual = draft_pick_logic.invalid_input('@2', {"object": "card", "name": "Gush"})
         expected = "You are not the active drafter. Please wait until it is your turn."
         self.assertEqual(expected, actual)
 
-    def test_valid_input_card_doesnt_exist(self):
+    def test_invalid_input_card_doesnt_exist(self):
 
-        """Tests valid input with non existent card"""
+        """Tests invalid input with non existent card"""
 
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
         draft_pick_logic.fire_draft(player_mentions, 45)
-        actual = draft_pick_logic.valid_input('@1', ('assdassdassdsdsdsd',))
+        actual = draft_pick_logic.invalid_input('@1', {"object": "error"})
         expected = "This card does not exist."
         self.assertEqual(expected, actual)
 
-    def test_valid_input_card_already_picked(self):
+    def test_invalid_input_card_already_picked(self):
 
-        """Tests valid input with a non unique card."""
+        """Tests invalid input with a non unique card."""
 
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
         draft_pick_logic.fire_draft(player_mentions, 45)
         draft_pick_logic.card_tracker.add_card('@2', 'Island')
-        actual = draft_pick_logic.valid_input('@1', ('Island',))
+        actual = draft_pick_logic.invalid_input('@1', {"object": "card", "name": "Island"})
         expected = "That card has already been chosen. Please try again."
         self.assertEqual(expected, actual)
 
-    def test_valid_input_not_fired(self):
+    def test_invalid_input_not_fired(self):
 
-        """Tests valid input with valid input"""
+        """Tests invalid input with valid input"""
 
         draft_pick_logic = DraftPickLogic()
-        actual = draft_pick_logic.valid_input('@1', ('Island',))
+        actual = draft_pick_logic.invalid_input('@1', {"object": "card", "name": "Island"})
         expected = "You cannot make picks until the draft has fired."
         self.assertEqual(expected, actual)
 
-    def test_valid_input_valid(self):
+    def test_invalid_input_valid(self):
 
-        """Tests valid input with valid input"""
+        """Tests invalid input with valid input"""
 
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
         draft_pick_logic.fire_draft(player_mentions, 45)
-        actual = draft_pick_logic.valid_input('@1', ('Island',))
+        actual = draft_pick_logic.invalid_input('@1', {"object": "card", "name": "Island"})
         expected = None
         self.assertEqual(expected, actual)
 

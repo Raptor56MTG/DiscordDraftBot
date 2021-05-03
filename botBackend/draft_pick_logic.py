@@ -56,9 +56,9 @@ class DraftPickLogic():
         self.row_move = None
         self.column_move = None
 
-    def valid_input(self, mention: str, card: tuple) -> bool:
+    def invalid_input(self, mention: str, card_json: object) -> bool:
 
-        """This checks if the card and user are valid."""
+        """This checks if the input is invalid."""
 
         # draft has not been fired
         if not self.fired:
@@ -69,11 +69,12 @@ class DraftPickLogic():
             return "You are not the active drafter. Please wait until it is your turn."
 
         # card does not exists
-        if not scryfallapi.card_exists(card):
+        if card_json["object"] == "error":
             return "This card does not exist."
 
-        # after using source of truth card was already picked
-        if scryfallapi.get_fuzzied_correct(card) in self.card_tracker.get_cards():
+        # get fuzzy corrected name as source of truth and then see that it
+        # was already picked.
+        if card_json["name"] in self.card_tracker.get_cards():
             return "That card has already been chosen. Please try again."
 
         return None
@@ -84,18 +85,20 @@ class DraftPickLogic():
         All others methods below are executed in series to execute a pick
         in a proper fasion."""
 
-        # checks if input is invalid
-        invalid = self.valid_input(mention, card)
+        # make our one off call to scryfall to get the json
+        card_json = scryfallapi.get_scryfall_json(card)
 
+        # if input is invalid then break and inform the user
+        invalid = self.invalid_input(mention, card_json)
         if invalid:
             return invalid
 
-        # make the pick
-        card_name = scryfallapi.get_fuzzied_correct(card)
+        # otherwise if valid make the pick
+        card_name = card_json["name"]
         self.card_tracker.add_card(mention, card_name)
         sheetapi.pick(card_name, self.row, self.column)
 
-        # pipeline to update
+        # pipeline to update after pick
         self.row_update()
         self.column_update()
         self.active_player_update()
