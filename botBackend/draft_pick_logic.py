@@ -56,7 +56,7 @@ class DraftPickLogic():
         self.row_move = None
         self.column_move = None
 
-    def invalid_input(self, mention: str, card_json: object) -> bool:
+    def invalid_input(self, mention: str, card_json: dict) -> bool:
 
         """This checks if the input is invalid."""
 
