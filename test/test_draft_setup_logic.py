@@ -1,6 +1,7 @@
 from botBackend.draft_setup_logic import DraftSetupLogic
 import unittest
- 
+
+
 class TestDraftSetupLogic(unittest.TestCase):
 
     #####################################
@@ -62,16 +63,15 @@ class TestDraftSetupLogic(unittest.TestCase):
         logic.setup_draft("4", "45")
         logic.join_draft("tester", "1")
         actual = logic.info_draft()
-        expected = ("```player_count is: 4\n" + 
-                        "pick_count is: 45\n" +
-                        "draft_fired status is: False\n" +
-                        "Current joined drafters are:\n" +
-                        "tester\n"+
-                        "```")
+        expected = ("```player_count is: 4\n" +
+                    "pick_count is: 45\n" +
+                    "draft_fired status is: False\n" +
+                    "Current joined drafters are:\n" +
+                    "tester\n" + "```")
         self.assertEqual(actual, expected)
 
     def test_info_draft_not_setup(self):
-        
+
         """Tests output of trying to get draft info when it has not been set up."""
 
         logic = DraftSetupLogic()
@@ -84,8 +84,9 @@ class TestDraftSetupLogic(unittest.TestCase):
     #####################################
 
     def test_fire_draft_already_fired(self):
-        
+
         """Tests trying to fire a draft when it has already fired."""
+
         logic = DraftSetupLogic()
         logic.setup_draft("2", "45")
         logic.join_draft("player_1", "1")
@@ -96,18 +97,18 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_fire_draft_not_setup(self):
-        
+
         """Tests trying to fire a draft when it is not setup."""
-        
+
         logic = DraftSetupLogic()
         actual = logic.fire_draft()
         expected = "The draft has not been set up."
         self.assertEqual(actual, expected)
 
     def test_fire_draft_not_full(self):
-        
+
         """Tests trying to fire a draft without filling it up."""
-        
+
         logic = DraftSetupLogic()
         logic.setup_draft("4", "45")
         actual = logic.fire_draft()
@@ -115,7 +116,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_fire_draft_valid_1(self):
-        
+
         """Tests firing the draft with valid criteria. Checks fire variable."""
 
         logic = DraftSetupLogic()
@@ -127,7 +128,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertTrue(logic.draft_fired)
 
     def test_fire_draft_valid_2(self):
-        
+
         """Tests firing the draft with valid criteria. Checks string return."""
 
         logic = DraftSetupLogic()
@@ -136,7 +137,8 @@ class TestDraftSetupLogic(unittest.TestCase):
         logic.join_draft("player_2", "2")
         logic.join_draft("player_3", "3")
         actual = logic.fire_draft()
-        expected = "The draft has fired and is currently being set up. All other commands are disabled until sheet setup is complete." 
+        expected = ("The draft has fired and is currently being set up. " +
+                    "All other commands are disabled until sheet setup is complete.")
         self.assertEqual(actual, expected)
 
     #####################################
@@ -144,9 +146,9 @@ class TestDraftSetupLogic(unittest.TestCase):
     #####################################
 
     def test_join_draft_already_fired(self):
-        
+
         """Tests trying to join when the draft has already fired."""
-        
+
         logic = DraftSetupLogic()
         logic.setup_draft("2", "45")
         logic.join_draft("player1", "1")
@@ -157,18 +159,18 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_join_draft_not_setup(self):
-        
+
         """Tests trying to join when draft is not setup."""
-        
+
         logic = DraftSetupLogic()
         actual = logic.join_draft("player1", "1")
         expected = "The draft has not been set up."
         self.assertEqual(actual, expected)
 
     def test_join_draft_already_joined(self):
-        
+
         """Tests trying to join draft twice."""
-        
+
         logic = DraftSetupLogic()
         logic.setup_draft("4", "45")
         logic.join_draft("player_1", "1")
@@ -177,9 +179,9 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_join_draft_full(self):
-        
+
         """Tests trying to join draft when it is full."""
-        
+
         logic = DraftSetupLogic()
         logic.setup_draft("2", "45")
         logic.join_draft("player1", "1")
@@ -189,9 +191,9 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_join_draft_valid_1(self):
-        
+
         """Tests trying to join draft when valid and getting return value."""
-        
+
         logic = DraftSetupLogic()
         logic.setup_draft("2", "45")
         actual = logic.join_draft("player_1", "1")
@@ -199,9 +201,9 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_join_draft_valid_2(self):
-        
+
         """Tests trying to join draft when valid and getting list of players."""
-        
+
         logic = DraftSetupLogic()
         logic.setup_draft("8", "45")
         logic.join_draft("player1", "1")
@@ -213,15 +215,16 @@ class TestDraftSetupLogic(unittest.TestCase):
         logic.join_draft("player7", "7")
         logic.join_draft("player8", "8")
         actual = logic.players
-        expected = {'1' : 'player1',
-                    '2' : 'player2',
-                    '3' : 'player3',
-                    '4' : 'player4',
-                    '5' : 'player5',
-                    '6' : 'player6',
-                    '7' : 'player7',
-                    '8' : 'player8',
-                   }
+        expected = {'1': 'player1',
+                    '2': 'player2',
+                    '3': 'player3',
+                    '4': 'player4',
+                    '5': 'player5',
+                    '6': 'player6',
+                    '7': 'player7',
+                    '8': 'player8',
+                    }
+
         self.assertEqual(actual, expected)
 
     #####################################
@@ -229,7 +232,7 @@ class TestDraftSetupLogic(unittest.TestCase):
     #####################################
 
     def test_leave_already_fired(self):
-        
+
         """Tests trying to leave the draft when it has already fired."""
 
         logic = DraftSetupLogic()
@@ -242,9 +245,9 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_leave_draft_not_joined(self):
-        
+
         """Tests trying to leave when you have not joined."""
-        
+
         logic = DraftSetupLogic()
         logic.setup_draft("2", "45")
         logic.join_draft("player1", "1")
@@ -254,7 +257,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_leave_draft_valid_1(self):
-        
+
         """Tests trying to leave when valid and checking return value."""
 
         logic = DraftSetupLogic()
@@ -266,7 +269,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_leave_draft_valid_2(self):
-        
+
         """Tests trying to leave when valid and checking drafters list variable."""
 
         logic = DraftSetupLogic()
@@ -276,13 +279,13 @@ class TestDraftSetupLogic(unittest.TestCase):
         logic.join_draft("player3", "3")
         logic.join_draft("player4", "4")
         logic.join_draft("player5", "5")
-        logic.leave_draft("player1","1")
+        logic.leave_draft("player1", "1")
         actual = logic.players
-        expected = {'2' : 'player2',
-                    '3' : 'player3',
-                    '4' : 'player4',
-                    '5' : 'player5',
-                   }
+        expected = {'2': 'player2',
+                    '3': 'player3',
+                    '4': 'player4',
+                    '5': 'player5',
+                    }
         self.assertEqual(actual, expected)
 
     #####################################
@@ -290,7 +293,7 @@ class TestDraftSetupLogic(unittest.TestCase):
     #####################################
 
     def test_setup_draft_already_fired(self):
-        
+
         """Tests setting up a draft when it has already fired."""
 
         logic = DraftSetupLogic()
@@ -298,93 +301,94 @@ class TestDraftSetupLogic(unittest.TestCase):
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
         logic.fire_draft()
-        actual = logic.setup_draft("4","45")
+        actual = logic.setup_draft("4", "45")
         expected = ("The draft has already fired. Please wait for " +
                     "it to be finished before starting another draft.")
         self.assertEqual(actual, expected)
 
     def test_setup_draft_already_setup(self):
-        
+
         """Tests setting up a draft when one is already set up."""
 
         logic = DraftSetupLogic()
-        logic.setup_draft("4","45")
-        actual = logic.setup_draft("4","45")
-        expected = "The draft setup has already been completed. To modify the setup use the edit commands."
+        logic.setup_draft("4", "45")
+        actual = logic.setup_draft("4", "45")
+        expected = ("The draft setup has already been completed. " +
+                    "To modify the setup use the edit commands.")
         self.assertEqual(actual, expected)
 
     def test_setup_draft_invalid_input_1(self):
-        
+
         """Tests setting up a draft with invalid input for player count."""
 
         logic = DraftSetupLogic()
-        actual = logic.setup_draft("-1","45")
+        actual = logic.setup_draft("-1", "45")
         expected = "Invalid parameters. Please use the '!help setup' command for details."
         self.assertEqual(actual, expected)
 
     def test_setup_draft_invalid_input_2(self):
-        
+
         """Tests setting up a draft with invalid input for pick count."""
 
         logic = DraftSetupLogic()
-        actual = logic.setup_draft("5","1000")
+        actual = logic.setup_draft("5", "1000")
         expected = "Invalid parameters. Please use the '!help setup' command for details."
         self.assertEqual(actual, expected)
 
     def test_setup_draft_invalid_input_3(self):
-        
+
         """Tests setting up a draft with invalid input for player count."""
 
         logic = DraftSetupLogic()
-        actual = logic.setup_draft("wwwwww","45")
+        actual = logic.setup_draft("wwwwww", "45")
         expected = "Invalid parameters. Please use the '!help setup' command for details."
         self.assertEqual(actual, expected)
 
     def test_setup_draft_invalid_input_4(self):
-        
+
         """Tests setting up a draft with invalid input for pick count."""
 
         logic = DraftSetupLogic()
-        actual = logic.setup_draft("5","ergd")
+        actual = logic.setup_draft("5", "ergd")
         expected = "Invalid parameters. Please use the '!help setup' command for details."
         self.assertEqual(actual, expected)
 
     def test_setup_draft_valid_1(self):
-        
+
         """Tests valid setup and checking return value."""
 
         logic = DraftSetupLogic()
-        actual = logic.setup_draft("5","50")
-        expected =  ("The draft has been set up. We have 5 players and 50 " +
+        actual = logic.setup_draft("5", "50")
+        expected = ("The draft has been set up. We have 5 players and 50 " +
                     "picks. Use the !join command to be added to the draft.")
         self.assertEqual(actual, expected)
 
     def test_setup_draft_valid_2(self):
-        
+
         """Tests valid setup and checking player count"""
 
         logic = DraftSetupLogic()
-        logic.setup_draft("5","50")
+        logic.setup_draft("5", "50")
         actual = logic.player_count
         expected = 5
         self.assertEqual(actual, expected)
 
     def test_setup_draft_valid_3(self):
-        
+
         """Tests valid setup and checking pick count"""
 
         logic = DraftSetupLogic()
-        logic.setup_draft("5","50")
+        logic.setup_draft("5", "50")
         actual = logic.pick_count
         expected = 50
         self.assertEqual(actual, expected)
 
     def test_setup_draft_valid_4(self):
-        
+
         """Tests valid setup and checking setup value"""
 
         logic = DraftSetupLogic()
-        logic.setup_draft("5","50")
+        logic.setup_draft("5", "50")
         actual = logic.setup
         expected = True
         self.assertEqual(actual, expected)
@@ -394,7 +398,7 @@ class TestDraftSetupLogic(unittest.TestCase):
     #####################################
 
     def test_edit_player_already_fired(self):
-        
+
         """Tests editing a draft when it has already fire."""
 
         logic = DraftSetupLogic()
@@ -407,7 +411,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_player_draft_not_setup(self):
-        
+
         """Tests editing players when draft has not been set up."""
 
         logic = DraftSetupLogic()
@@ -416,7 +420,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_player_invalid_input_1(self):
-        
+
         """Tests editing a draft with invalid input"""
 
         logic = DraftSetupLogic()
@@ -426,7 +430,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_player_invalid_input_2(self):
-        
+
         """Tests editing player count with invalid input"""
 
         logic = DraftSetupLogic()
@@ -436,7 +440,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_player_invalid_input_3(self):
-        
+
         """Tests editing player count with invalid input"""
 
         logic = DraftSetupLogic()
@@ -446,7 +450,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_player_valid_1(self):
-        
+
         """Tests editing a draft with valid input for pick count"""
 
         logic = DraftSetupLogic()
@@ -456,7 +460,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_player_valid_2(self):
-        
+
         """Tests editing a draft with valid input for player count"""
 
         logic = DraftSetupLogic()
@@ -468,8 +472,8 @@ class TestDraftSetupLogic(unittest.TestCase):
 
     def test_edit__player_too_small(self):
 
-        """Tests editing a draft with valid input for player 
-        count but is smaller than the current number of 
+        """Tests editing a draft with valid input for player
+        count but is smaller than the current number of
         players in the draft queue. """
 
         logic = DraftSetupLogic()
@@ -479,7 +483,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         logic.join_draft("player_3", "3")
         logic.join_draft("player_4", "4")
         actual = logic.edit_player("3")
-        expected = ("The draft currently has too many players to go to 3" + 
+        expected = ("The draft currently has too many players to go to 3" +
                     " players. Please have players leave before making the edit.")
         self.assertEqual(actual, expected)
 
@@ -488,7 +492,7 @@ class TestDraftSetupLogic(unittest.TestCase):
     #####################################
 
     def test_edit_pick_already_fired(self):
-        
+
         """Tests editing a draft when it has already fired."""
 
         logic = DraftSetupLogic()
@@ -501,7 +505,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_pick_draft_not_setup(self):
-        
+
         """Tests editing players when draft has not been set up."""
 
         logic = DraftSetupLogic()
@@ -510,7 +514,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_pick_invalid_input_1(self):
-        
+
         """Tests editing a draft with invalid input"""
 
         logic = DraftSetupLogic()
@@ -520,7 +524,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_pick_invalid_input_2(self):
-        
+
         """Tests editing player count with invalid input"""
 
         logic = DraftSetupLogic()
@@ -530,7 +534,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_pick_invalid_input_3(self):
-        
+
         """Tests editing pick count with invalid input"""
 
         logic = DraftSetupLogic()
@@ -540,7 +544,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_pick_valid_1(self):
-        
+
         """Tests editing a draft with valid input for pick count"""
 
         logic = DraftSetupLogic()
@@ -550,7 +554,7 @@ class TestDraftSetupLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_edit_pick_valid_2(self):
-        
+
         """Tests editing a draft with valid input for player count"""
 
         logic = DraftSetupLogic()
@@ -565,7 +569,7 @@ class TestDraftSetupLogic(unittest.TestCase):
     #####################################
 
     def test_reset(self):
-        
+
         """Tests the reset method once a draft is finished."""
 
         logic = DraftSetupLogic()
@@ -573,20 +577,21 @@ class TestDraftSetupLogic(unittest.TestCase):
         logic.join_draft("p1", "1")
         logic.join_draft("p2", "2")
         logic.fire_draft()
-        
-        self.assertTrue(logic.draft_fired == True 
-                and logic.setup == True
-                and logic.player_count == 2
-                and logic.pick_count == 45
-                and logic.players == {"1" : "p1", "2" : "p2"})
+
+        self.assertTrue(logic.draft_fired is True
+                        and logic.setup is True
+                        and logic.player_count == 2
+                        and logic.pick_count == 45
+                        and logic.players == {"1": "p1", "2": "p2"})
 
         logic.reset()
 
-        self.assertTrue(logic.draft_fired == False 
-                    and logic.setup == False
-                    and logic.player_count == 0
-                    and logic.pick_count == 0
-                    and logic.players == {})
+        self.assertTrue(logic.draft_fired is False
+                        and logic.setup is False
+                        and logic.player_count == 0
+                        and logic.pick_count == 0
+                        and logic.players == {})
+
 
 if __name__ == "__main__":
     unittest.main()

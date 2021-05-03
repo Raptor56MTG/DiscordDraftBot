@@ -1,8 +1,9 @@
 import unittest
 from botBackend.draft_pick_logic import DraftPickLogic, CardTracker
 
+
 class TestDraftPickLogic(unittest.TestCase):
-    
+
     #####################################
     ###         PROPERTY TESTS        ###
     #####################################
@@ -54,16 +55,16 @@ class TestDraftPickLogic(unittest.TestCase):
                     "@2": ['gush', 'ponder', 'oko, thief of crowns'],
                     "@3": ['island', 'mountain'],
                     "@4": ['swamp', 'forest']}
-        
+
         actual = card_tracker.card_tracker
 
         self.assertEqual(expected, actual)
 
     def test_card_tracker_get_cards(self):
-        
-        """Tests the get all method to return a list of all cards 
+
+        """Tests the get all method to return a list of all cards
         in the draft."""
-        
+
         player_mentions = ['@1', '@2', '@3', '@4']
 
         card_tracker = CardTracker(player_mentions)
@@ -77,11 +78,11 @@ class TestDraftPickLogic(unittest.TestCase):
         card_tracker.add_card('@2', 'Ponder')
         card_tracker.add_card('@1', 'Preordain')
 
-        expected = ['Lightning Bolt', 'Preordain', 'Gush', 'Ponder', 
-        'Island', 'Mountain', 'Swamp', 'Forest']
-    
+        expected = ['Lightning Bolt', 'Preordain', 'Gush', 'Ponder',
+                    'Island', 'Mountain', 'Swamp', 'Forest']
+
         actual = card_tracker.get_cards()
-        
+
         self.assertEqual(expected, actual)
 
     #####################################
@@ -89,9 +90,9 @@ class TestDraftPickLogic(unittest.TestCase):
     #####################################
 
     def test_valid_input_not_active_player(self):
-        
+
         """Tests valid input with player who went out of order"""
-        
+
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
         draft_pick_logic.fire_draft(player_mentions, 45)
@@ -100,9 +101,9 @@ class TestDraftPickLogic(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_valid_input_card_doesnt_exist(self):
-        
+
         """Tests valid input with non existent card"""
-        
+
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
         draft_pick_logic.fire_draft(player_mentions, 45)
@@ -111,9 +112,9 @@ class TestDraftPickLogic(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_valid_input_card_already_picked(self):
-        
+
         """Tests valid input with a non unique card."""
-        
+
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
         draft_pick_logic.fire_draft(player_mentions, 45)
@@ -123,19 +124,18 @@ class TestDraftPickLogic(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_valid_input_not_fired(self):
-        
+
         """Tests valid input with valid input"""
-        
-        player_mentions = ['@1', '@2', '@3', '@4']
+
         draft_pick_logic = DraftPickLogic()
         actual = draft_pick_logic.valid_input('@1', ('Island',))
         expected = "You cannot make picks until the draft has fired."
         self.assertEqual(expected, actual)
 
     def test_valid_input_valid(self):
-        
+
         """Tests valid input with valid input"""
-        
+
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
         draft_pick_logic.fire_draft(player_mentions, 45)
@@ -151,7 +151,7 @@ class TestDraftPickLogic(unittest.TestCase):
 
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
-        draft_pick_logic.fire_draft(player_mentions, 45) # 2
+        draft_pick_logic.fire_draft(player_mentions, 45)  # 2
         actual = draft_pick_logic.row
         expected = 2
         self.assertEqual(expected, actual)
@@ -199,18 +199,18 @@ class TestDraftPickLogic(unittest.TestCase):
         self.assertEqual(expected, actual)
 
         draft_pick_logic.row_update()  # 4
-        draft_pick_logic.active_player_update() 
+        draft_pick_logic.active_player_update()
         actual = draft_pick_logic.row
         expected = 4
         self.assertEqual(expected, actual)
 
     def test_column_update(self):
-        
+
         """Ensures the column updates correctly."""
-        
+
         player_mentions = ['@1', '@2', '@3', '@4']
         draft_pick_logic = DraftPickLogic()
-        draft_pick_logic.fire_draft(player_mentions, 45) # 2
+        draft_pick_logic.fire_draft(player_mentions, 45)  # 2
         actual = draft_pick_logic.column
         expected = 2
         self.assertEqual(expected, actual)
@@ -252,7 +252,7 @@ class TestDraftPickLogic(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_active_player_update(self):
-        
+
         """Ensures the active player index updates as intended.
         This follows a snake like pattern."""
 
@@ -262,7 +262,7 @@ class TestDraftPickLogic(unittest.TestCase):
         actual = draft_pick_logic.players[draft_pick_logic.active_player_index]
         expected = '@1'
         self.assertEqual(actual, expected)
-        
+
         draft_pick_logic.active_player_update()  # 2
         actual = draft_pick_logic.players[draft_pick_logic.active_player_index]
         expected = '@2'
@@ -304,7 +304,7 @@ class TestDraftPickLogic(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_picks_remaining_update(self):
-        
+
         """Ensures picks remaining updates as intended"""
 
         player_mentions = ['@1', '@2', '@3', '@4']
@@ -317,9 +317,10 @@ class TestDraftPickLogic(unittest.TestCase):
         draft_pick_logic.picks_remaining_update()
 
         actual = draft_pick_logic.picks_remaining
-        expected = 175 # 45 * 4 - 4 = 175
+        expected = 175  # 45 * 4 - 4 = 175
 
         self.assertEqual(expected, actual)
+
 
 if __name__ == "__main__":
     unittest.main()
