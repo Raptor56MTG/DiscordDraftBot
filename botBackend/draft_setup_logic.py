@@ -48,13 +48,13 @@ class DraftSetupLogic():
         if not self.setup:
             return "The draft has not been set up."
         else:
-            info = ("```player_count is: " + str(self.player_count)
-                    + "\npick_count is: " + str(self.pick_count)
-                    + "\ndraft_fired status is: " + str(self.draft_fired)
-                    + "\nCurrent joined drafters are:\n")
+            info = (f"```player_count is: {self.player_count}\n" +
+                    f"pick_count is: {self.pick_count}\n" +
+                    f"draft_fired status is: {self.draft_fired}\n" +
+                    "Current joined drafters are:\n")
 
             for drafter in self.players:
-                info += str(self.players[drafter]) + "\n"
+                info += f"{self.players[drafter]}\n"
 
             info += "```"
             return info
@@ -88,11 +88,11 @@ class DraftSetupLogic():
             return "The draft has not been set up."
 
         elif mention in self.players:
-            return username + " has already been added to the draft."
+            return f"{username} has already been added to the draft."
 
         elif len(self.players) < self.player_count:
             self.players[mention] = username
-            return username + " has been added to the draft."
+            return f"{username} has been added to the draft."
         else:
             return "The draft is full. Please join the next draft!"
 
@@ -105,7 +105,7 @@ class DraftSetupLogic():
 
         elif mention in self.players:
             del self.players[mention]
-            return username + " has left the draft."
+            return f"{username} has left the draft."
         else:
             return "You cannot leave the draft if you never joined."
 
@@ -124,16 +124,16 @@ class DraftSetupLogic():
 
         # Invalid input (invalid value, or out of bounds)
         elif (not pick_count.isdigit() or not player_count.isdigit() or
-              int(pick_count) < self.PICK_COUNT_MIN or int(pick_count) > self.PICK_COUNT_MAX or
-              int(player_count) < self.PLAYER_COUNT_MIN or int(player_count) > self.PLAYER_COUNT_MAX):
+              int(pick_count) < self.PICK_COUNT_MIN or int(player_count) < self.PLAYER_COUNT_MIN or
+              int(pick_count) > self.PICK_COUNT_MAX or int(player_count) > self.PLAYER_COUNT_MAX):
             return "Invalid parameters. Please use the '!help setup' command for details."
 
         else:
             self.player_count = int(player_count)
             self.pick_count = int(pick_count)
             self.setup = True
-            return ("The draft has been set up. We have " + str(self.player_count) + " players and "
-                    + str(self.pick_count) + " picks. Use the !join command to be added to the draft.")
+            return (f"The draft has been set up. We have {self.player_count} players and " +
+                    f"{self.pick_count} picks. Use the !join command to be added to the draft.")
 
     def edit_player(self, player_count: str) -> str:
 
