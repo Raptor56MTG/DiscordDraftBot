@@ -44,7 +44,6 @@ def card_exists(card: tuple) -> bool:
     card_url = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
     scryfall_json = requests.get(card_url)
     object_type = scryfall_json.json()["object"]
-
     return object_type != "error"
 
 
