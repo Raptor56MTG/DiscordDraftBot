@@ -3,9 +3,8 @@ import requests
 
 def get_scryfall_json(card: tuple) -> object:
 
-    """This returns the json object of the card passed in.
-    This then allows us to get input like if it exists,
-    fuzzy corrected names, image urls, legalities and more."""
+    """Returns the json object of the card passed in.
+    Scryfall uses a fuzzy API so minor misspelings are allowed."""
 
     card_url = "https://api.scryfall.com/cards/named?fuzzy=" + " ".join(card).title()
     scryfall_json = requests.get(card_url)
@@ -14,9 +13,8 @@ def get_scryfall_json(card: tuple) -> object:
 
 def get_card_image(card: tuple) -> tuple:
 
-    """This method returns the image of a card and the correct name.
-    If the card does not exist, then it raises a value error.
-    Scryfall uses a fuzzy API so minor misspelings are allowed."""
+    """Returns the image of a card and the correct name.
+    If the card does not exist, then it raises a value error."""
 
     scryfall_json = get_scryfall_json(card)
 
@@ -30,9 +28,8 @@ def get_card_image(card: tuple) -> tuple:
 
 def get_card_legality(card: tuple) -> tuple:
 
-    """This method returns the legality of a card and the correct name.
-    If the card does not exist, then it raises a value error.
-    Scryfall uses a fuzzy API so minor misspelings are allowed."""
+    """Returns the legality of a card and the correct name.
+    If the card does not exist, then it raises a value error."""
 
     scryfall_json = get_scryfall_json(card)
 
