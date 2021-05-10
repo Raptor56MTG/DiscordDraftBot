@@ -3,7 +3,7 @@ from decouple import config
 from gspread_formatting import CellFormat, Color, format_cell_range, format_cell_ranges
 
 
-def setupSheet(players: list, picks: int):
+def setup_sheet(players: list, picks: int):
 
     """Sets up default values for the sheet.
     This includes player names, pick count, and color."""
