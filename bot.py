@@ -11,7 +11,7 @@ def main():
     bot.remove_command("help")
 
     cogs = ['cogs.scryfall_commands', 'cogs.help_commands', 'cogs.remind_commands',
-            'cogs.bot_events', 'cogs.draft_setup_pick_commands', ]
+            'cogs.bot_events', 'cogs.draft_logic_commands', ]
 
     for cog in cogs:
         bot.load_extension(cog)

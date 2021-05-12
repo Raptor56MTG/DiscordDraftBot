@@ -1,24 +1,20 @@
 import discord
 from discord.ext import commands
-import random
-from decouple import config
 import sys
 sys.path.append('..')
-from botBackend.draft_setup_logic import DraftSetupLogic
-from botBackend.draft_pick_logic import DraftPickLogic
+from botBackend.draft_logic import DraftLogic
 from botBackend import sheetapi
 from botBackend.screenshot import take_screenshot
 
 
-class DraftSetupPickCommands(commands.Cog):
+class DraftLogicCommands(commands.Cog):
 
     """This class holds all the commands related to the draft setup logic
     and draft pick logic commands."""
 
     def __init__(self, bot):
         self.bot = bot
-        self.setup_logic = DraftSetupLogic()
-        self.pick_logic = DraftPickLogic()
+        self.setup_logic = DraftLogic()
 
     @commands.command(aliases=['Cancel', 'cancel'])
     async def cancel_draft(self, ctx):
@@ -99,43 +95,14 @@ class DraftSetupPickCommands(commands.Cog):
         """Fires the draft provided the setup is valid."""
 
         if not isinstance(ctx.channel, discord.channel.DMChannel):
+            
+            # notify the user that the draft is attempting to be fired
+            await ctx.send("Attempting to fire the draft. Please wait a moment.")
 
-            # already fired no need to do anything
-            if self.setup_logic.draft_fired:
-                embed = discord.Embed(description=self.setup_logic.fire_draft(),
-                                      colour=discord.Color.blue())
-                await ctx.send(embed=embed)
-
-            else:
-                # attempt to fire
-                output = self.setup_logic.fire_draft()
-                embed = discord.Embed(description=output, colour=discord.Color.blue())
-                await ctx.send(embed=embed)
-
-                # if draft does fire successfully
-                if self.setup_logic.draft_fired:
-
-                    # shuffle player names and mentions to get an identical random order for draft
-                    names_mentions = list(zip(list(self.setup_logic.players.values()),
-                                              list(self.setup_logic.players.keys())))
-                    random.shuffle(names_mentions)
-                    player_names, mentions = zip(*names_mentions)
-
-                    # inform the pick logic that the draft has fired
-                    self.pick_logic.fire_draft(list(mentions), self.setup_logic.pick_count)
-
-                    # setup our sheet
-                    sheetapi.setupSheet(list(player_names), self.setup_logic.pick_count)
-
-                    # send google doc info
-                    link = config('DOCS_LINK')
-                    embed = discord.Embed(description=link, colour=discord.Color.blue())
-                    embed.set_footer(text=("Setup has been completed. The sheet is available"
-                                           "at the link above."))
-                    await ctx.send(embed=embed)
-
-                    # notify the first drafter it is their turn to draft
-                    await ctx.send(f"{list(mentions)[0]} it is your turn to pick!")
+            # attempt to fire and notify users of outcome
+            embed = discord.Embed(description=self.setup_logic.fire_draft(),
+                                  colour=discord.Color.blue())
+            await ctx.send(embed=embed)
 
     @commands.command(aliases=['Pick'])
     async def pick(self, ctx, *card: str):
@@ -144,48 +111,44 @@ class DraftSetupPickCommands(commands.Cog):
         The draft needs to have fired for this to work."""
 
         if not isinstance(ctx.channel, discord.channel.DMChannel):
+            
+            # try to make the pick
+            embed = discord.Embed(description=self.setup_logic.pick(
+                                  ctx.message.author.name, ctx.author.mention, card),
+                                  colour=discord.Color.blue())
+            await ctx.send(embed=embed)
 
-            # try to make a pick
-            username = ctx.message.author.name
-            mention = ctx.author.mention
-            description = self.pick_logic.pick(username, mention, card)
+            # if we have reached the end of the draft.
+            if self.setup_logic.picks_remaining == 0 and self.setup_logic.draft_fired:
 
-            # if the draft has been fired and there are no more picks to make,
-            # take a picture then reset it for the next one.
-            if self.pick_logic.fired and self.pick_logic.picks_remaining == 0:
-
-                await ctx.send("Draft has been finished. Decks and pictures will arrive shortly.")
-
+                # send deck files
                 await self.generate_text_files(ctx)
-
+                
+                # take a screenshot 
                 take_screenshot()
                 with open('completed_draft.png', 'rb') as f:
                     picture = discord.File(f)
                     await ctx.send(file=picture)
 
+                # reset logic for next draft 
                 self.setup_logic.reset()
-                self.pick_logic.reset()
-                sheetapi.reset_sheet()
-
-            embed = discord.Embed(description=description, colour=discord.Color.blue())
-            await ctx.send(embed=embed)
-
+  
     async def generate_text_files(self, ctx):
 
         """This generates the text file for the users. I am not a fan
         of having this logic outside of the  pick logic, but it is what
         it is."""
 
-        for player in self.pick_logic.card_tracker.card_tracker:
+        for player in self.setup_logic.picks:
 
             # populate the text file with their deck
             with open("deck.txt", "w") as file:
-                for card in self.pick_logic.card_tracker.card_tracker[player]:
+                for card in self.setup_logic.picks[player]:
                     file.write(f"1 {card}\n")
 
             # send them their text file
             with open("deck.txt", "rb") as file:
-                await ctx.send(f"{player}'s deck", file=discord.File(file, "rotissare_deck.txt"))
+                await ctx.send(f"{player.username}'s deck", file=discord.File(file, "rotissare_deck.txt"))
 
             # clear the text file so we can refill it with the next deck.
             with open('deck.txt', 'w'):
