@@ -1296,10 +1296,10 @@ class TestDraftLogic(unittest.TestCase):
             self.assertEqual(logic.active_player_index, 0)
             self.assertEqual(logic.row, 2)
             self.assertEqual(logic.column, 2)
-            self.assertIsNone(logic.row_move)
-            self.assertIsNone(logic.column_move)
-            self.assertIsNone(logic.picks_remaining)
-            self.assertIsNone(logic.snake_player_list)
+            self.assertEqual(logic.row_move, [])
+            self.assertEqual(logic.column_move, [])
+            self.assertEqual(logic.picks_remaining, [])
+            self.assertEqual(logic.snake_player_list, [])
 
 
 if __name__ == "__main__":

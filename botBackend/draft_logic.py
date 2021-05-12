@@ -42,10 +42,10 @@ class DraftLogic():
         self.active_player_index = 0
         self.row = 2
         self.column = 2
-        self.row_move = None
-        self.column_move = None
-        self.picks_remaining = None
-        self.snake_player_list = None
+        self.row_move = []
+        self.column_move = []
+        self.picks_remaining = []
+        self.snake_player_list = []
 
     ###################################
     ###      DRAFT SETUP LOGIC      ###
@@ -316,12 +316,12 @@ class DraftLogic():
         # reset pick / sheet api values to defaults
         self.picks = {}
         self.active_player_index = 0
-        self.snake_player_list = None
         self.row = 2
         self.column = 2
-        self.row_move = None
-        self.column_move = None
-        self.picks_remaining = None
+        self.row_move = []
+        self.column_move = []
+        self.picks_remaining = []
+        self.snake_player_list = []
 
         # call sheet api to reset
         sheetapi.reset_sheet()
