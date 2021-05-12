@@ -29,7 +29,7 @@ class DraftLogic():
         self.PICK_COUNT_MIN = 5
         self.PICK_COUNT_MAX = 100
 
-        # setup values 
+        # setup values
         self.player_count = 0
         self.pick_count = 0
         self.players = []
@@ -42,10 +42,10 @@ class DraftLogic():
         self.active_player_index = 0
         self.row = 2
         self.column = 2
-        self.snake_player_list = None
         self.row_move = None
         self.column_move = None
         self.picks_remaining = None
+        self.snake_player_list = None
 
     ###################################
     ###      DRAFT SETUP LOGIC      ###
@@ -209,7 +209,7 @@ class DraftLogic():
             return "Please ensure that the draft is full."
 
         else:
-            # fire the draft 
+            # fire the draft
             self.draft_fired = True
 
             # shuffle the player order to randomize it
@@ -222,14 +222,17 @@ class DraftLogic():
             self.picks_remaining = self.pick_count * self.player_count
 
             # instantiate the lists to inform the google sheet API how to move
-            self.row_move = ([0] * (self.player_count - 1)) + [1] + ([0] * (self.player_count - 1)) + [1]
-            self.column_move = ([1] * (self.player_count - 1)) + [0] + [-1] * ((self.player_count - 1)) + [0]
+            self.row_move = (([0] * (self.player_count - 1)) + [1] +
+                             ([0] * (self.player_count - 1)) + [1])
+            self.column_move = (([1] * (self.player_count - 1)) + [0] +
+                                [-1] * ((self.player_count - 1)) + [0])
 
             # append usernames to sheet
             player_names = [player.username for player in self.players]
             sheetapi.setup_sheet(player_names, self.pick_count)
 
-            return (f"Setup has been completed.\n\nSheet is available here: {config('DOCS_LINK')}\n\n" + 
+            return ("Setup has been completed.\n\nSheet is available here: " +
+                    f"{config('DOCS_LINK')}\n\n" +
                     f"{self.snake_player_list[0].user_id} is up first.")
 
     def pick(self, username: str, user_id: str, card: tuple) -> str:

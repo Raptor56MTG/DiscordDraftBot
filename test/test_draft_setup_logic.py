@@ -1237,10 +1237,10 @@ class TestDraftLogic(unittest.TestCase):
             logic.join_draft("player_3", "3")
             logic.join_draft("player_4", "4")
             logic.fire_draft()
-        
+
             # use mock to ensure we don't call scryfall api.
             with patch('botBackend.draft_logic.scryfallapi.get_scryfall_json') as mock_api:
-   
+
                 mock_api.return_value = {'object': 'card', 'name': 'Gush'}
                 logic.pick('player_1', '1', ('Gush',))
                 mock_api.return_value = {'object': 'card', 'name': 'Ponder'}

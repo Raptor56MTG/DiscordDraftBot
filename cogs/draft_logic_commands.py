@@ -3,7 +3,6 @@ from discord.ext import commands
 import sys
 sys.path.append('..')
 from botBackend.draft_logic import DraftLogic
-from botBackend import sheetapi
 from botBackend.screenshot import take_screenshot
 
 
@@ -95,7 +94,7 @@ class DraftLogicCommands(commands.Cog):
         """Fires the draft provided the setup is valid."""
 
         if not isinstance(ctx.channel, discord.channel.DMChannel):
-            
+
             # notify the user that the draft is attempting to be fired
             await ctx.send("Attempting to fire the draft. Please wait a moment.")
 
@@ -111,7 +110,7 @@ class DraftLogicCommands(commands.Cog):
         The draft needs to have fired for this to work."""
 
         if not isinstance(ctx.channel, discord.channel.DMChannel):
-            
+
             # try to make the pick
             embed = discord.Embed(description=self.setup_logic.pick(
                                   ctx.message.author.name, ctx.author.mention, card),
@@ -123,16 +122,16 @@ class DraftLogicCommands(commands.Cog):
 
                 # send deck files
                 await self.generate_text_files(ctx)
-                
-                # take a screenshot 
+
+                # take a screenshot
                 take_screenshot()
                 with open('completed_draft.png', 'rb') as f:
                     picture = discord.File(f)
                     await ctx.send(file=picture)
 
-                # reset logic for next draft 
+                # reset logic for next draft
                 self.setup_logic.reset()
-  
+
     async def generate_text_files(self, ctx):
 
         """This generates the text file for the users. I am not a fan
@@ -148,7 +147,8 @@ class DraftLogicCommands(commands.Cog):
 
             # send them their text file
             with open("deck.txt", "rb") as file:
-                await ctx.send(f"{player.username}'s deck", file=discord.File(file, "rotissare_deck.txt"))
+                await ctx.send(f"{player.username}'s deck",
+                               file=discord.File(file, "rotissare_deck.txt"))
 
             # clear the text file so we can refill it with the next deck.
             with open('deck.txt', 'w'):
@@ -156,4 +156,4 @@ class DraftLogicCommands(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(DraftSetupPickCommands(bot))
+    bot.add_cog(DraftLogicCommands(bot))
