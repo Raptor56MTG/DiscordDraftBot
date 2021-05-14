@@ -34,6 +34,7 @@ class DraftLogic():
         self.pick_count = 0
         self.players = []
         self.picks = {}
+        self.prepicks = {}
         self.setup = False
         self.draft_fired = False
 
@@ -103,6 +104,7 @@ class DraftLogic():
         elif len(self.players) < self.player_count:
             self.players.append(Player(username, user_id))
             self.picks[Player(username, user_id)] = []
+            self.prepicks[Player(username, user_id)] = []
             return f"{username} has been added to the draft."
         else:
             return "The draft is full. Please join the next draft!"
@@ -117,6 +119,7 @@ class DraftLogic():
         elif Player(username, user_id) in self.players:
             self.players.remove(Player(username, user_id))
             del self.picks[Player(username, user_id)]
+            del self.prepicks[Player(username, user_id)]
             return f"{username} has left the draft."
         else:
             return "You cannot leave the draft if you never joined."
@@ -229,7 +232,7 @@ class DraftLogic():
 
             # append usernames to sheet
             player_names = [player.username for player in self.players]
-            sheetapi.setup_sheet(player_names, self.pick_count)
+            # sheetapi.setup_sheet(player_names, self.pick_count)
 
             return ("Setup has been completed.\n\nSheet is available here: " +
                     f"{config('DOCS_LINK')}\n\n" +
@@ -298,6 +301,107 @@ class DraftLogic():
         self.picks_remaining -= 1
 
     ###################################
+    ###    DRAFT PRE-PICK LOGIC     ###
+    ###################################
+
+    def pre_pick(self, username: str, user_id: str, card: tuple) -> str:
+
+        """"Allows users to pick cards in advance."""
+
+        # make 1 time call to scryfall
+        card_json = scryfallapi.get_scryfall_json(card)
+
+        # check if input is not valid
+        invalid = self.invalid_prepick(username, user_id, card_json)
+        if invalid:
+            return invalid
+
+        # otherwise if valid make the pre pick
+        self.prepicks[Player(username, user_id)].append(card_json["name"])
+
+        return f'You have successfully picked: {card_json["name"]}.'
+
+    def cancel_pre_pick(self, username: str, user_id: str, card: tuple) -> str:
+
+        """"Allows users to cancel prepicks."""
+
+        # make 1 time call to scryfall
+        card_json = scryfallapi.get_scryfall_json(card)
+
+        # check if input is not valid
+        invalid = self.invalid_cancel_prepick(username, user_id, card_json)
+        if invalid:
+            return invalid
+
+        # otherwise remove prepick
+        self.prepicks[Player(username, user_id)].remove(card_json["name"])
+        return f'You have successfully removed: {card_json["name"]}.'
+
+    def get_pre_picks(self, username, user_id) -> str:
+
+        if not self.draft_fired:
+            return "No pre-picks as draft has not fired."
+
+        if Player(username, user_id) not in self.prepicks:
+            return "You are not in this draft and have no pre-picks."
+
+        if len(self.prepicks[Player(username, user_id)]) == 0:
+            return "Pre-pick queue is empty."
+
+        prepicks = "```"
+
+        i = 1
+
+        for prepick in self.prepicks[Player(username, user_id)]:
+            prepicks += f"{i}. {prepick}\n"
+            i += 1
+
+        prepicks += "```"
+
+        return prepicks
+
+    def invalid_cancel_prepick(self, username: str, user_id: str, card_json: dict) -> str:
+
+        """Determines if a cancelled pre-pick was invalid."""
+
+        if not self.draft_fired:
+            return "You cannot cancel pre-picks until the draft has fired."
+
+        if Player(username, user_id) not in self.prepicks:
+            return "You are not in this draft and cannot cancel pre-picks."
+
+        if card_json["object"] == "error":
+            return "This card does not exist."
+
+        if card_json["name"] not in self.prepicks[Player(username, user_id)]:
+            return "Cannot remove cards you have not pre-picked."
+
+        return None
+
+    def invalid_prepick(self, username: str, user_id: str, card_json: dict) -> str:
+
+        """Determines if a pre-pick was invalid."""
+
+        if not self.draft_fired:
+            return "You cannot make pre-picks until the draft has fired."
+
+        if Player(username, user_id) not in self.prepicks:
+            return "You are not in this draft and cannot make pre-picks."
+
+        if card_json["object"] == "error":
+            return "This card does not exist."
+
+        # used list comprehension here to combine all the lists
+        # in the dictionary into one list that can be searched.
+        if card_json["name"] in [cards for picks in self.picks.values() for cards in picks]:
+            return "That card has already been chosen in the draft. Please try again."
+
+        if card_json["name"] in self.prepicks[Player(username, user_id)]:
+            return "You have already pre-picked this card. Please try again."
+
+        return None
+
+    ###################################
     ###      RESET DRAFT LOGIC      ###
     ###################################
 
@@ -315,6 +419,7 @@ class DraftLogic():
 
         # reset pick / sheet api values to defaults
         self.picks = {}
+        self.prepicks = {}
         self.active_player_index = 0
         self.row = 2
         self.column = 2

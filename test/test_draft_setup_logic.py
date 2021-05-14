@@ -273,6 +273,8 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_fire_draft_valid_3(self):
 
+        """Ensures all setup values are correct upon firing."""
+
         # Use a seed to ensure the random call in the fire
         # method is always the same.
         random.seed(100)
@@ -308,6 +310,12 @@ class TestDraftLogic(unittest.TestCase):
                               Player(username="player3", user_id="3"): []}
 
             self.assertEqual(logic.picks, expected_picks)
+
+            expected_prepicks = {Player(username="player1", user_id="1"): [],
+                                 Player(username="player2", user_id="2"): [],
+                                 Player(username="player3", user_id="3"): []}
+
+            self.assertEqual(logic.prepicks, expected_prepicks)
 
             expected_snake_player_list = [Player(username='player3', user_id='3'),
                                           Player(username='player2', user_id='2'),
@@ -445,6 +453,37 @@ class TestDraftLogic(unittest.TestCase):
 
         self.assertEqual(actual, expected)
 
+    def test_join_draft_valid_4(self):
+
+        """Tests trying to join draft when valid and
+        getting dictionary for prepicks."""
+
+        logic = DraftLogic()
+
+        logic.setup_draft("8", "45")
+
+        logic.join_draft("player1", "1")
+        logic.join_draft("player2", "2")
+        logic.join_draft("player3", "3")
+        logic.join_draft("player4", "4")
+        logic.join_draft("player5", "5")
+        logic.join_draft("player6", "6")
+        logic.join_draft("player7", "7")
+        logic.join_draft("player8", "8")
+
+        actual = logic.prepicks
+
+        expected = {Player(username='player1', user_id='1'): [],
+                    Player(username='player2', user_id='2'): [],
+                    Player(username='player3', user_id='3'): [],
+                    Player(username='player4', user_id='4'): [],
+                    Player(username='player5', user_id='5'): [],
+                    Player(username='player6', user_id='6'): [],
+                    Player(username='player7', user_id='7'): [],
+                    Player(username='player8', user_id='8'): []}
+
+        self.assertEqual(actual, expected)
+
     #####################################
     ###          LEAVE TESTS          ###
     #####################################
@@ -551,6 +590,42 @@ class TestDraftLogic(unittest.TestCase):
         logic.leave_draft("player1", "1")
 
         actual = logic.picks
+
+        expected = {Player(username='player2', user_id='2'): [],
+                    Player(username='player3', user_id='3'): [],
+                    Player(username='player4', user_id='4'): [],
+                    Player(username='player5', user_id='5'): []}
+
+        self.assertEqual(actual, expected)
+
+    def test_leave_draft_valid_4(self):
+
+        """Tests trying to leave when valid and checking
+        prepicks."""
+
+        logic = DraftLogic()
+
+        logic.setup_draft("5", "45")
+
+        logic.join_draft("player1", "1")
+        logic.join_draft("player2", "2")
+        logic.join_draft("player3", "3")
+        logic.join_draft("player4", "4")
+        logic.join_draft("player5", "5")
+
+        actual = logic.prepicks
+
+        expected = {Player(username='player1', user_id='1'): [],
+                    Player(username='player2', user_id='2'): [],
+                    Player(username='player3', user_id='3'): [],
+                    Player(username='player4', user_id='4'): [],
+                    Player(username='player5', user_id='5'): []}
+
+        self.assertEqual(actual, expected)
+
+        logic.leave_draft("player1", "1")
+
+        actual = logic.prepicks
 
         expected = {Player(username='player2', user_id='2'): [],
                     Player(username='player3', user_id='3'): [],
@@ -795,7 +870,7 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_edit_pick_invalid_input_1(self):
 
-        """Tests editing a draft with invalid input"""
+        """Tests editing a draft with invalid input."""
 
         logic = DraftLogic()
         logic.setup_draft("4", "45")
@@ -805,7 +880,7 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_edit_pick_invalid_input_2(self):
 
-        """Tests editing player count with invalid input"""
+        """Tests editing player count with invalid input."""
 
         logic = DraftLogic()
         logic.setup_draft("4", "45")
@@ -815,7 +890,7 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_edit_pick_invalid_input_3(self):
 
-        """Tests editing pick count with invalid input"""
+        """Tests editing pick count with invalid input."""
 
         logic = DraftLogic()
         logic.setup_draft("4", "45")
@@ -825,7 +900,7 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_edit_pick_valid_1(self):
 
-        """Tests editing a draft with valid input for pick count"""
+        """Tests editing a draft with valid input for pick count."""
 
         logic = DraftLogic()
         logic.setup_draft("4", "45")
@@ -835,7 +910,7 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_edit_pick_valid_2(self):
 
-        """Tests editing a draft with valid input for player count"""
+        """Tests editing a draft with valid input for player count."""
 
         logic = DraftLogic()
         logic.setup_draft("4", "45")
@@ -850,6 +925,8 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_row_update(self):
 
+        """Ensures the row updates correctly."""
+
         # use mock to ensure we don't call google sheet api
         with patch('botBackend.draft_logic.sheetapi'):
 
@@ -863,55 +940,55 @@ class TestDraftLogic(unittest.TestCase):
 
             actual = logic.row
             expected = 2
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.row_update()  # 2
             logic.active_player_update()
             actual = logic.row
             expected = 2
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.row_update()  # 2
             logic.active_player_update()
             actual = logic.row
             expected = 2
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.row_update()  # 2
             logic.active_player_update()
             actual = logic.row
             expected = 2
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.row_update()  # 3
             logic.active_player_update()
             actual = logic.row
             expected = 3
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.row_update()  # 3
             logic.active_player_update()
             actual = logic.row
             expected = 3
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.row_update()  # 3
             logic.active_player_update()
             actual = logic.row
             expected = 3
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.row_update()  # 3
             logic.active_player_update()
             actual = logic.row
             expected = 3
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.row_update()  # 4
             logic.active_player_update()
             actual = logic.row
             expected = 4
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
     def test_column_update(self):
 
@@ -930,61 +1007,61 @@ class TestDraftLogic(unittest.TestCase):
 
             actual = logic.column  # 2
             expected = 2
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 3
             logic.active_player_update()
             actual = logic.column
             expected = 3
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 4
             logic.active_player_update()
             actual = logic.column
             expected = 4
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 5
             logic.active_player_update()
             actual = logic.column
             expected = 5
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 5
             logic.active_player_update()
             actual = logic.column
             expected = 5
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 4
             logic.active_player_update()
             actual = logic.column
             expected = 4
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 3
             logic.active_player_update()
             actual = logic.column
             expected = 3
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 2
             logic.active_player_update()
             actual = logic.column
             expected = 2
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 2
             logic.active_player_update()
             actual = logic.column
             expected = 2
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
             logic.column_update()  # 3
             logic.active_player_update()
             actual = logic.column
             expected = 3
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
     def test_active_player_update(self):
 
@@ -1052,7 +1129,7 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_picks_remaining_update(self):
 
-        """Ensures picks remaining updates as intended"""
+        """Ensures picks remaining updates as intended."""
 
         # Use a seed to ensure the random call in the fire
         # method is always the same. (1 3 4 2 2 4 3 1)
@@ -1078,7 +1155,7 @@ class TestDraftLogic(unittest.TestCase):
             actual = logic.picks_remaining
             expected = 175  # 45 * 4 - 4 = 175
 
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
     #####################################
     ###       INVALID PICK TESTS      ###
@@ -1086,7 +1163,7 @@ class TestDraftLogic(unittest.TestCase):
 
     def test_invalid_pick_not_active_player(self):
 
-        """Tests invalid input with player who went out of order"""
+        """Tests invalid input with player who went out of order."""
 
         # Use a seed to ensure the random call in the fire
         # method is always the same. (1 3 4 2 2 4 3 1)
@@ -1109,11 +1186,11 @@ class TestDraftLogic(unittest.TestCase):
 
             actual = logic.invalid_pick('player_2', '2', {'object': 'card', 'name': 'Gush'})
             expected = "You are not the active drafter. Please wait until it is your turn."
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
-    def test_invalid_input_card_doesnt_exist(self):
+    def test_invalid_pick_card_doesnt_exist(self):
 
-        """Tests invalid input with non existent card"""
+        """Tests invalid input with non existent card."""
 
         # Use a seed to ensure the random call in the fire
         # method is always the same. (1 3 4 2 2 4 3 1)
@@ -1134,9 +1211,9 @@ class TestDraftLogic(unittest.TestCase):
 
             actual = logic.invalid_pick('player_1', '1', {'object': 'error'})
             expected = "This card does not exist."
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
-    def test_invalid_input_card_already_picked(self):
+    def test_invalid_pick_card_already_picked(self):
 
         """Tests invalid input with a non unique card."""
 
@@ -1164,11 +1241,11 @@ class TestDraftLogic(unittest.TestCase):
             actual = logic.invalid_pick('player_1', '1', {'object': 'card', 'name': 'Gush'})
 
             expected = "That card has already been chosen. Please try again."
-            self.assertEqual(expected, actual)
+            self.assertEqual(actual, expected)
 
-    def test_invalid_input_not_fired(self):
+    def test_invalid_pick_not_fired(self):
 
-        """Tests invalid input when not fired"""
+        """Tests invalid input when not fired."""
 
         # Use a seed to ensure the random call in the fire
         # method is always the same. (1 3 4 2 2 4 3 1)
@@ -1186,11 +1263,11 @@ class TestDraftLogic(unittest.TestCase):
         actual = logic.invalid_pick('player_1', '1', {'object': 'card', 'name': 'Gush'})
 
         expected = "You cannot make picks until the draft has fired."
-        self.assertEqual(expected, actual)
+        self.assertEqual(actual, expected)
 
-    def test_invalid_input_valid(self):
+    def test_invalid_pick_valid(self):
 
-        """Tests invalid input with valid input"""
+        """Tests invalid input with valid input."""
 
         # Use a seed to ensure the random call in the fire
         # method is always the same. (1 3 4 2 2 4 3 1)
@@ -1219,7 +1296,7 @@ class TestDraftLogic(unittest.TestCase):
     ###       PICK TRACKER TESTS      ###
     #####################################
 
-    def test_card_tracker_add_card(self):
+    def test_pick_tracker_add_card(self):
 
         """Ensures the card tracker works as intended."""
 
@@ -1256,7 +1333,461 @@ class TestDraftLogic(unittest.TestCase):
                             Player('player_4', '4'): ['Skred']}
 
                 actual = logic.picks
-                self.assertEqual(expected, actual)
+                self.assertEqual(actual, expected)
+
+    #####################################
+    ###        PRE PICK TESTS       ###
+    #####################################
+
+    def test_pre_pick(self):
+
+        """Ensures prepick works as intended."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            # use mock to ensure we don't call scryfall api.
+            with patch('botBackend.draft_logic.scryfallapi.get_scryfall_json') as mock_api:
+
+                mock_api.return_value = {'object': 'card', 'name': 'Gush'}
+                logic.pre_pick('player_1', '1', ('Gush',))
+                mock_api.return_value = {'object': 'card', 'name': 'Ponder'}
+                logic.pre_pick('player_3', '3', ('Ponder',))
+                mock_api.return_value = {'object': 'card', 'name': 'Skred'}
+                logic.pre_pick('player_4', '4', ('Skred',))
+                mock_api.return_value = {'object': 'card', 'name': 'Swamp'}
+                logic.pre_pick('player_2', '2', ('Swamp',))
+
+                expected = {Player('player_1', '1'): ['Gush'],
+                            Player('player_2', '2'): ['Swamp'],
+                            Player('player_3', '3'): ['Ponder'],
+                            Player('player_4', '4'): ['Skred']}
+
+                actual = logic.prepicks
+                self.assertEqual(actual, expected)
+
+    #####################################
+    ###   CANCEL PICK TRACKER TESTS   ###
+    #####################################
+
+    def test_cancel_pre_pick(self):
+
+        """Ensures cancel prepick works as intended."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            # use mock to ensure we don't call scryfall api.
+            with patch('botBackend.draft_logic.scryfallapi.get_scryfall_json') as mock_api:
+
+                mock_api.return_value = {'object': 'card', 'name': 'Gush'}
+                logic.pre_pick('player_1', '1', ('Gush',))
+                mock_api.return_value = {'object': 'card', 'name': 'Ponder'}
+                logic.pre_pick('player_3', '3', ('Ponder',))
+                mock_api.return_value = {'object': 'card', 'name': 'Skred'}
+                logic.pre_pick('player_4', '4', ('Skred',))
+                mock_api.return_value = {'object': 'card', 'name': 'Swamp'}
+                logic.pre_pick('player_2', '2', ('Swamp',))
+
+                mock_api.return_value = {'object': 'card', 'name': 'Gush'}
+                actual = logic.cancel_pre_pick('player_1', '1', ("Gush",))
+                expected = 'You have successfully removed: Gush.'
+                self.assertEqual(actual, expected)
+
+                expected = {Player('player_1', '1'): [],
+                            Player('player_2', '2'): ['Swamp'],
+                            Player('player_3', '3'): ['Ponder'],
+                            Player('player_4', '4'): ['Skred']}
+
+                actual = logic.prepicks
+                self.assertEqual(actual, expected)
+
+    #####################################
+    ###      GET PREPICKS TESTS       ###
+    #####################################
+
+    def test_get_pre_picks_not_fired(self):
+
+        """Ensures prepicks work as intended."""
+
+        logic = DraftLogic()
+
+        actual = logic.get_pre_picks('player_1', '1')
+        expected = "No pre-picks as draft has not fired."
+        self.assertEqual(actual, expected)
+
+    def test_get_pre_picks_invalid_player(self):
+
+        """Ensures the card tracker works as intended."""
+        """Ensures the get prepicks works as intended."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.get_pre_picks('player_5', '5')
+            expected = "You are not in this draft and have no pre-picks."
+
+            self.assertEqual(actual, expected)
+
+    def test_get_pre_picks_empty(self):
+
+        """Ensures the get prepicks works as intended."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.get_pre_picks('player_1', '1')
+            expected = "Pre-pick queue is empty."
+
+            self.assertEqual(actual, expected)
+
+    def test_get_pre_picks_valid(self):
+
+        """Ensures the get prepicks works as intended."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            # use mock to ensure we don't call scryfall api.
+            with patch('botBackend.draft_logic.scryfallapi.get_scryfall_json') as mock_api:
+
+                mock_api.return_value = {'object': 'card', 'name': 'Gush'}
+                logic.pre_pick('player_1', '1', ('Gush',))
+                mock_api.return_value = {'object': 'card', 'name': 'Ponder'}
+                logic.pre_pick('player_1', '1', ('Ponder',))
+                mock_api.return_value = {'object': 'card', 'name': 'Skred'}
+                logic.pre_pick('player_1', '1', ('Skred',))
+                mock_api.return_value = {'object': 'card', 'name': 'Swamp'}
+                logic.pre_pick('player_1', '1', ('Swamp',))
+
+                actual = logic.get_pre_picks('player_1', '1')
+                expected = '```1. Gush\n2. Ponder\n3. Skred\n4. Swamp\n```'
+
+                self.assertEqual(actual, expected)
+
+    #####################################
+    ###    INVALID PRE-PICK TESTS     ###
+    #####################################
+
+    def test_invalid_prepick_not_in_draft(self):
+
+        """Tests invalid input with player who is not in draft."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.invalid_prepick('player_5', '5', {'object': 'card', 'name': 'Gush'})
+            expected = "You are not in this draft and cannot make pre-picks."
+            self.assertEqual(actual, expected)
+
+    def test_invalid_prepick_card_doesnt_exist(self):
+
+        """Tests invalid input with non existent card"""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.invalid_prepick('player_1', '1', {'object': 'error'})
+            expected = "This card does not exist."
+            self.assertEqual(actual, expected)
+
+    def test_invalid_prepick_not_fired(self):
+
+        """Tests invalid input when not fired"""
+
+        logic = DraftLogic()
+
+        actual = logic.invalid_prepick('player_1', '1', {'object': 'card', 'name': 'Gush'})
+
+        expected = "You cannot make pre-picks until the draft has fired."
+        self.assertEqual(actual, expected)
+
+    def test_invalid_prepick_valid(self):
+
+        """Tests invalid input with valid input"""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.invalid_prepick('player_1', '1', {'object': 'card', 'name': 'Gush'})
+            self.assertIsNone(actual)
+
+    def test_invalid_prepick_already_picked(self):
+
+        """Tests invalid input with a non unique card."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            logic.picks[Player('player_2', '2')].append("Gush")
+            actual = logic.invalid_prepick('player_1', '1', {'object': 'card', 'name': 'Gush'})
+
+            expected = "That card has already been chosen in the draft. Please try again."
+            self.assertEqual(actual, expected)
+
+    def test_invalid_prepick_already_prepicked(self):
+
+        """Tests invalid input with a non unique prepick card."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            logic.prepicks[Player('player_1', '1')].append("Gush")
+            actual = logic.invalid_prepick('player_1', '1', {'object': 'card', 'name': 'Gush'})
+
+            expected = "You have already pre-picked this card. Please try again."
+            self.assertEqual(actual, expected)
+
+    #####################################
+    ###     INVALID CANCEL PRE-PICK   ###
+    #####################################
+
+    def test_invalid_cancel_prepick_not_in_draft(self):
+
+        """Tests invalid input with player who is not in draft."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.invalid_cancel_prepick(
+                'player_5', '5', {'object': 'card', 'name': 'Gush'})
+            expected = "You are not in this draft and cannot cancel pre-picks."
+            self.assertEqual(actual, expected)
+
+    def test_invalid_cancel_prepick_card_doesnt_exist(self):
+
+        """Tests invalid input with non existent card"""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.invalid_cancel_prepick('player_1', '1', {'object': 'error'})
+            expected = "This card does not exist."
+            self.assertEqual(actual, expected)
+
+    def test_invalid_cancel_prepick_not_fired(self):
+
+        """Tests invalid input when not fired"""
+
+        logic = DraftLogic()
+
+        actual = logic.invalid_cancel_prepick('player_1', '1', {'object': 'card', 'name': 'Gush'})
+
+        expected = "You cannot cancel pre-picks until the draft has fired."
+        self.assertEqual(actual, expected)
+
+    def test_invalid_cancel_prepick_not_pre_picked(self):
+
+        """Tests invalid input with valid input"""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.invalid_cancel_prepick(
+                'player_1', '1', {'object': 'card', 'name': 'Gush'})
+            expected = "Cannot remove cards you have not pre-picked."
+            self.assertEqual(actual, expected)
+
+    def test_invalid_cancel_prepick_valid(self):
+
+        """Tests invalid input with valid input"""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            # use mock to ensure we don't call scryfall api.
+            with patch('botBackend.draft_logic.scryfallapi.get_scryfall_json') as mock_api:
+
+                mock_api.return_value = {'object': 'card', 'name': 'Gush'}
+                logic.pre_pick('player_1', '1', ('Gush',))
+
+                actual = logic.invalid_cancel_prepick(
+                    'player_1', '1', {'object': 'card', 'name': 'Gush'})
+                self.assertIsNone(actual)
 
     #####################################
     ###           RESET TESTS         ###
@@ -1292,6 +1823,7 @@ class TestDraftLogic(unittest.TestCase):
             self.assertEqual(logic.player_count, 0)
             self.assertEqual(logic.pick_count, 0)
             self.assertEqual(logic.picks, {})
+            self.assertEqual(logic.prepicks, {})
             self.assertEqual(logic.players, [])
             self.assertEqual(logic.active_player_index, 0)
             self.assertEqual(logic.row, 2)
