@@ -1378,6 +1378,87 @@ class TestDraftLogic(unittest.TestCase):
                 actual = logic.prepicks
                 self.assertEqual(actual, expected)
 
+    def test_iterate_pre_pick_1(self):
+
+        """Ensures prepick works as intended."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            # use mock to ensure we don't call scryfall api.
+            with patch('botBackend.draft_logic.scryfallapi.get_scryfall_json') as mock_api:
+
+                mock_api.return_value = {'object': 'card', 'name': 'Gush'}
+                logic.pre_pick('player_1', '1', ('Gush',))
+                mock_api.return_value = {'object': 'card', 'name': 'Ponder'}
+                logic.pre_pick('player_3', '3', ('Ponder',))
+                mock_api.return_value = {'object': 'card', 'name': 'Skred'}
+                logic.pre_pick('player_4', '4', ('Skred',))
+                mock_api.return_value = {'object': 'card', 'name': 'Swamp'}
+                logic.pre_pick('player_2', '2', ('Swamp',))
+
+                actual = logic.iterate_prepicks()
+                expected = [('player_1', 'Gush'),
+                            ('player_3', 'Ponder'),
+                            ('player_4', 'Skred'),
+                            ('player_2', 'Swamp')]
+                self.assertEqual(actual, expected)
+
+                actual = logic.picks_remaining
+                expected = 176
+                self.assertEqual(actual, expected)
+
+    def test_iterate_pre_pick_2(self):
+
+        """Ensures prepick works as intended."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            # use mock to ensure we don't call scryfall api.
+            with patch('botBackend.draft_logic.scryfallapi.get_scryfall_json') as mock_api:
+
+                logic.picks_remaining = 3
+
+                mock_api.return_value = {'object': 'card', 'name': 'Gush'}
+                logic.pre_pick('player_1', '1', ('Gush',))
+                mock_api.return_value = {'object': 'card', 'name': 'Ponder'}
+                logic.pre_pick('player_3', '3', ('Ponder',))
+                mock_api.return_value = {'object': 'card', 'name': 'Skred'}
+                logic.pre_pick('player_4', '4', ('Skred',))
+                mock_api.return_value = {'object': 'card', 'name': 'Swamp'}
+                logic.pre_pick('player_2', '2', ('Swamp',))
+
+                actual = logic.iterate_prepicks()
+                expected = [('player_1', 'Gush'),
+                            ('player_3', 'Ponder'),
+                            ('player_4', 'Skred')]
+                self.assertEqual(actual, expected)
+
     #####################################
     ###   CANCEL PICK TRACKER TESTS   ###
     #####################################

@@ -261,12 +261,76 @@ class DraftLogic():
         self.column_update()
         self.active_player_update()
         self.picks_remaining_update()
+        self.prepicks_update(card_json["name"])
+
+        # see if there are any prepicks that can be made
+        pre_picks_made = self.iterate_prepicks()
+
+        # informs us about the picks and prepicks made 
+        statement = ""
+        statement += f'{username} has chosen {card_json["name"]}.\n'
+        for pre_pick in pre_picks_made:
+            statement += f'{pre_pick[0]} has chosen {pre_pick[1]}.\n'
 
         if self.picks_remaining > 0:
-            return (f'{username} has chosen {card_json["name"]}. ' +
-                    f'{self.snake_player_list[self.active_player_index].user_id} is up.')
+            statement += f'{self.snake_player_list[self.active_player_index].user_id} is up.'
         else:
-            return "Congrats! The draft has been finished! Decks and pictures will arrive shortly."
+            statement += "Congrats! The draft has been finished! Decks and pictures will arrive shortly."
+
+        return statement
+
+    def iterate_prepicks(self):
+
+        """This iterates through the prepicks until the active player
+        has no prepicks to make, or the draft is over."""
+
+        more_prepicks = True
+        more_picks = self.picks_remaining > 0
+
+        total_picks = []
+
+        while more_prepicks and more_picks:
+
+            # get the new active player
+            active_player = self.snake_player_list[self.active_player_index]
+
+            # if they have no picks to make, we are done
+            if not self.prepicks[active_player]:
+                more_prepicks = False
+
+            else:
+                # make the pick for that player
+                pick = self.prepicks[active_player].pop(0)
+                self.picks[active_player].append(pick)
+                sheetapi.pick(pick, self.row, self.column)
+
+                # pipeline to update after pick
+                self.row_update()
+                self.column_update()
+                self.active_player_update()
+                self.picks_remaining_update()
+                self.prepicks_update(pick)
+
+                # append the total picks so we know who did what.
+                total_picks.append((active_player.username, pick))
+
+                # ensure we have more picks to make
+                more_picks = self.picks_remaining > 0
+
+        return total_picks
+
+    def prepicks_update(self, card: str):
+
+        """This goes through the prepicks, and it removes
+        any prepicks that match the pick that was just made.
+        This will ensure that there are no redundant picks made."""
+
+        # iterate through all of the players
+        for player in self.prepicks:
+            
+            # if the most recent pick is in their prepicks, remove it
+            if card in self.prepicks[player]:
+                self.prepicks[player].remove(card)
 
     def invalid_pick(self, username: str, user_id: str, card_json: dict):
 
