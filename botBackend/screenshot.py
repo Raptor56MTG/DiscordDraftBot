@@ -10,6 +10,7 @@ def take_screenshot():
     # allow driver to be headless
     options = Options()
     options.headless = True
+    options.binary_location = config('GOOGLE_CHROME_PATH')
 
     PATH = config('CHROMEDRIVER_PATH')
     # set up driver based on executable and url location
