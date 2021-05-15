@@ -200,7 +200,7 @@ class DraftLogicCommands(commands.Cog):
             # send them their text file
             with open("deck.txt", "rb") as file:
                 await ctx.send(f"{player.username}'s deck",
-                               file=discord.File(file, "rotissare_deck.txt"))
+                               file=discord.File(file, "rotisserie_deck.txt"))
 
             # clear the text file so we can refill it with the next deck.
             with open('deck.txt', 'w'):
