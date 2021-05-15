@@ -30,7 +30,7 @@ class DraftLogicCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['Setup', 'setup'])
-    async def draft_setup(self, ctx, players: str, picks: str):
+    async def draft_setup(self, ctx, players: str, picks: str, format: str):
 
         """Sets up the draft with the number
         of players and the number of picks."""
@@ -38,7 +38,7 @@ class DraftLogicCommands(commands.Cog):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             description = "Cannot setup a draft over DM's."
         else:
-            description = self.logic.setup_draft(players, picks)
+            description = self.logic.setup_draft(players, picks, format)
 
         embed = discord.Embed(description=description, colour=discord.Color.blue())
         await ctx.send(embed=embed)
@@ -65,6 +65,19 @@ class DraftLogicCommands(commands.Cog):
             description = "Cannot edit a draft over DM's."
         else:
             description = self.logic.edit_pick(pick_count)
+
+        embed = discord.Embed(description=description, colour=discord.Color.blue())
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=['Edit_format'])
+    async def edit_format(self, ctx, format: str):
+
+        """Allows the format in the draft to be edited."""
+
+        if isinstance(ctx.channel, discord.channel.DMChannel):
+            description = "Cannot edit a draft over DM's."
+        else:
+            description = self.logic.edit_format(format)
 
         embed = discord.Embed(description=description, colour=discord.Color.blue())
         await ctx.send(embed=embed)
@@ -121,7 +134,7 @@ class DraftLogicCommands(commands.Cog):
 
         """Allows a user to pick a card from the draft.
         The draft needs to have fired for this to work."""
-        
+
         # get the id of the channel we want to send to
         channel = self.bot.get_channel(int(config('CHANNEL_ID')))
 
@@ -129,7 +142,7 @@ class DraftLogicCommands(commands.Cog):
         embed = discord.Embed(description=self.logic.pick(
                               ctx.message.author.name, ctx.author.id, card),
                               colour=discord.Color.blue())
-        
+
         # send it in both dm and public so everyone knows
         await ctx.send(embed=embed)
         await channel.send(embed=embed)
@@ -191,7 +204,7 @@ class DraftLogicCommands(commands.Cog):
             description = self.logic.get_pre_picks(ctx.message.author.name, ctx.author.id)
         else:
             description = "Please cancel pre-picks over DM's."
-        
+
         embed = discord.Embed(description=description, colour=discord.Color.blue())
         await ctx.send(embed=embed)
 
@@ -215,7 +228,7 @@ class DraftLogicCommands(commands.Cog):
             # send them their text file
             with open("deck.txt", "rb") as file:
                 await channel.send(f"{player.username}'s deck",
-                               file=discord.File(file, "rotisserie_deck.txt"))
+                                   file=discord.File(file, "rotisserie_deck.txt"))
 
             # clear the text file so we can refill it with the next deck.
             with open('deck.txt', 'w'):

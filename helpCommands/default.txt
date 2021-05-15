@@ -10,45 +10,48 @@ Here are my commands and their parameters:
 3. card
     - Displays the image of the card provided it exists.
 
-4. edit_pick
+4. edit_format
+    - Edit the format of the draft during setup.
+
+5. edit_pick
     - Edit number of picks in the draft during setup.
 
-5. edit_player
+6. edit_player
     - Edit number of players in the draft during setup.
 
-6. fire
+7. fire
     - Fires the draft once setup is complete.
 
-7. getprepicks
+8. getprepicks
     - Allows the user to get a list of their prepicks.
 
-8. help
+9. help
     - Displays the helpful message you are currently seeing.
 
-9. info
+10. info
     - Displays information on the setup of the draft.
 
-10. join
+11. join
     - Allows a user to join a draft.
 
-11. leave
+12. leave
     - Allows a user to leave the draft during the setup
       stage.
 
-12. legal
+13. legal
     - States the legality of a card.
 
-13. pick
+14. pick
     - Allows a user to pick a card during the draft.
 
-14. prepick
+15. prepick
     - Allows the user to prepick a card.
 
-15. remind
+16. remind
     - Reminds a user to pick a card when the draft
       has fired and is running.
 
-16. setup
+17. setup
     - Sets up a draft with a specified player and pick count.
 
 Type !help {command} for more info on a command.```

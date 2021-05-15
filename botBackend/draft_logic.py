@@ -29,6 +29,11 @@ class DraftLogic():
         self.PICK_COUNT_MIN = 5
         self.PICK_COUNT_MAX = 100
 
+        # list of legal formats users can play in
+        self.FORMATS = ["standard", "future", "historic", "gladiator",
+                        "pioneer", "modern", "legacy", "pauper",
+                        "vintage", "penny", "commander", "brawl",
+                        "duel", "oldschool", "premodern", "freeform"]
         # setup values
         self.player_count = 0
         self.pick_count = 0
@@ -37,6 +42,7 @@ class DraftLogic():
         self.prepicks = {}
         self.setup = False
         self.draft_fired = False
+        self.format = None
 
         # pick values and info to inform the google
         # sheet api where to move.
@@ -80,6 +86,7 @@ class DraftLogic():
             info = (f"```player_count is: {self.player_count}\n" +
                     f"pick_count is: {self.pick_count}\n" +
                     f"draft_fired status is: {self.draft_fired}\n" +
+                    f'format is: {self.format}\n' +
                     "Current joined drafters are:\n")
 
             for player in self.players:
@@ -124,7 +131,7 @@ class DraftLogic():
         else:
             return "You cannot leave the draft if you never joined."
 
-    def setup_draft(self, player_count: str, pick_count: str) -> str:
+    def setup_draft(self, player_count: str, pick_count: str, format: str) -> str:
 
         """Sets up the draft with the number of players and
         the number of picks."""
@@ -138,7 +145,8 @@ class DraftLogic():
                     "To modify the setup use the edit commands.")
 
         # Invalid input (invalid value, or out of bounds)
-        elif (not pick_count.isdigit() or not player_count.isdigit() or
+        elif (format.lower() not in self.FORMATS or
+              not pick_count.isdigit() or not player_count.isdigit() or
               int(pick_count) < self.PICK_COUNT_MIN or int(player_count) < self.PLAYER_COUNT_MIN or
               int(pick_count) > self.PICK_COUNT_MAX or int(player_count) > self.PLAYER_COUNT_MAX):
             return "Invalid parameters. Please use the '!help setup' command for details."
@@ -147,8 +155,10 @@ class DraftLogic():
             self.player_count = int(player_count)
             self.pick_count = int(pick_count)
             self.setup = True
-            return (f"The draft has been set up. We have {self.player_count} players and " +
-                    f"{self.pick_count} picks. Use the !join command to be added to the draft.")
+            self.format = format
+            return (f"The draft has been set up. We have {self.player_count} players, " +
+                    f"{self.pick_count} picks, and the format is {self.format}. " +
+                    "Use the !join command to be added to the draft.")
 
     def edit_player(self, player_count: str) -> str:
 
@@ -169,10 +179,9 @@ class DraftLogic():
         elif len(self.players) > int(player_count):
             return ("The draft currently has too many players to go to " + player_count +
                     " players. Please have players leave before making the edit.")
-
         else:
             self.player_count = int(player_count)
-            return "Player count is: " + str(self.player_count)
+            return f"Player count is: {self.player_count}"
 
     def edit_pick(self, pick_count: str) -> str:
 
@@ -191,7 +200,24 @@ class DraftLogic():
 
         else:
             self.pick_count = int(pick_count)
-            return "Pick count is: " + str(self.pick_count)
+            return f"Pick count is: {self.pick_count}"
+
+    def edit_format(self, format: str) -> str:
+
+        """Allows for the format to be edited during draft setup."""
+
+        if self.draft_fired:
+            return "The draft has already fired. It cannot be edited."
+
+        elif not self.setup:
+            return "The draft has not been set up. It cannot be edited."
+
+        # if invalid input (not a number, or out of bounds)
+        elif (format.lower() not in self.FORMATS):
+            return "Invalid parameters. Please use the '!help edit_format' command for details."
+        else:
+            self.format = format.lower()
+            return f"Format is: {self.format}"
 
     ###################################
     ###       DRAFT PICK LOGIC      ###
@@ -351,6 +377,9 @@ class DraftLogic():
         if card_json["name"] in [cards for picks in self.picks.values() for cards in picks]:
             return "That card has already been chosen. Please try again."
 
+        if self.format != 'freeform' and card_json["legalities"][self.format] != 'legal':
+            return f"This card is not legal in {self.format}."
+
         return None
 
     def row_update(self):
@@ -415,11 +444,8 @@ class DraftLogic():
 
         prepicks = "```"
 
-        i = 1
-
-        for prepick in self.prepicks[Player(username, user_id)]:
+        for i, prepick in enumerate(self.prepicks[Player(username, user_id)], start=1):
             prepicks += f"{i}. {prepick}\n"
-            i += 1
 
         prepicks += "```"
 
@@ -456,6 +482,9 @@ class DraftLogic():
         if card_json["object"] == "error":
             return "This card does not exist."
 
+        if self.format != 'freeform' and card_json["legalities"][self.format] != 'legal':
+            return f"This card is not legal in {self.format}."
+
         # used list comprehension here to combine all the lists
         # in the dictionary into one list that can be searched.
         if card_json["name"] in [cards for picks in self.picks.values() for cards in picks]:
@@ -481,6 +510,7 @@ class DraftLogic():
         self.players = []
         self.draft_fired = False
         self.setup = False
+        self.format = None
 
         # reset pick / sheet api values to defaults
         self.picks = {}

@@ -1,9 +1,32 @@
-```setup {player_count} {pick_count}
+```setup {player_count} {pick_count} {format}
 
-Sets up a draft with a specified player and pick count.
-
+Sets up a draft with a specified player, pick count, and format.
+    
     player_count - must be between 2 and 8 inclusively.
     pick_count - must be between 45 and 100 inclusively.
+    format = must be one of the following: 
 
-    example: !setup 4 45
-    - Creates a draft with 4 players and 45 picks per player.```
+        - "brawl"
+        - "commander"
+        - "duel"
+        - "freeform"
+        - "future"
+        - "gladiator"
+        - "historic"
+        - "legacy"
+        - "modern"
+        - "oldschool"
+        - "pauper"
+        - "penny"
+        - "pioneer"
+        - "premodern"
+        - "standard"
+        - "vintage"
+
+        NOTE: freeform is not an actual format,
+        but implies that any card in the history
+        of magic is legal.
+
+    example: !setup 4 45 modern
+    - Creates a draft with 4 players, 45 picks per player,
+    and the format is modern.```

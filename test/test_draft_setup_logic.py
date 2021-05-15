@@ -25,7 +25,7 @@ class TestDraftLogic(unittest.TestCase):
         """tests cancelled a draft when players have joined"""
 
         logic = DraftLogic()
-        logic.setup_draft("2", "45")
+        logic.setup_draft("2", "45", "freeform")
         logic.join_draft("player_1", "1")
         actual = logic.cancel_draft()
         expected = "All players must leave the draft for it to be cancelled."
@@ -39,7 +39,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("2", "45")
+            logic.setup_draft("2", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.fire_draft()
@@ -52,7 +52,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests cancelling a draft under valid circumstances"""
 
         logic = DraftLogic()
-        logic.setup_draft("2", "45")
+        logic.setup_draft("2", "45", "freeform")
         actual = logic.cancel_draft()
         expected = "The draft setup has been cancelled."
         self.assertEqual(actual, expected)
@@ -63,7 +63,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -88,7 +88,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -116,12 +116,13 @@ class TestDraftLogic(unittest.TestCase):
         """Tests output of draft info when set up."""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         logic.join_draft("tester", "1")
         actual = logic.info_draft()
         expected = ("```player_count is: 4\n" +
                     "pick_count is: 45\n" +
                     "draft_fired status is: False\n" +
+                    "format is: freeform\n" +
                     "Current joined drafters are:\n" +
                     "tester\n" + "```")
         self.assertEqual(actual, expected)
@@ -141,7 +142,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -166,7 +167,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "modern")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -182,6 +183,7 @@ class TestDraftLogic(unittest.TestCase):
         expected = ("```player_count is: 4\n" +
                     "pick_count is: 45\n" +
                     "draft_fired status is: False\n" +
+                    "format is: modern\n" +
                     "Current joined drafters are:\n" +
                     "```")
 
@@ -199,7 +201,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("2", "45")
+            logic.setup_draft("2", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.fire_draft()
@@ -227,7 +229,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             actual = logic.fire_draft()
             expected = "Please ensure that the draft is full."
             self.assertEqual(actual, expected)
@@ -240,7 +242,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("3", "45")
+            logic.setup_draft("3", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -260,7 +262,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("3", "45")
+            logic.setup_draft("3", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -283,7 +285,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("3", "45")
+            logic.setup_draft("3", "45", "freeform")
             logic.join_draft("player1", "1")
             logic.join_draft("player2", "2")
             logic.join_draft("player3", "3")
@@ -344,7 +346,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("2", "45")
+            logic.setup_draft("2", "45", "freeform")
             logic.join_draft("player1", "1")
             logic.join_draft("player2", "2")
             logic.fire_draft()
@@ -366,7 +368,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests trying to join draft twice."""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         logic.join_draft("player_1", "1")
         actual = logic.join_draft("player_1", "1")
         expected = "player_1 has already been added to the draft."
@@ -377,7 +379,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests trying to join draft when it is full."""
 
         logic = DraftLogic()
-        logic.setup_draft("2", "45")
+        logic.setup_draft("2", "45", "freeform")
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
         actual = logic.join_draft("player3", "3")
@@ -389,7 +391,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests trying to join draft when valid and getting return value."""
 
         logic = DraftLogic()
-        logic.setup_draft("2", "45")
+        logic.setup_draft("2", "45", "freeform")
         actual = logic.join_draft("player_1", "1")
         expected = "player_1 has been added to the draft."
         self.assertEqual(actual, expected)
@@ -400,7 +402,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("8", "45")
+        logic.setup_draft("8", "45", "freeform")
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
         logic.join_draft("player3", "3")
@@ -429,7 +431,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("8", "45")
+        logic.setup_draft("8", "45", "freeform")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -460,7 +462,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("8", "45")
+        logic.setup_draft("8", "45", "freeform")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -496,7 +498,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("2", "45")
+            logic.setup_draft("2", "45", "freeform")
             logic.join_draft("player1", "1")
             logic.join_draft("player2", "2")
             logic.fire_draft()
@@ -509,7 +511,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests trying to leave when you have not joined."""
 
         logic = DraftLogic()
-        logic.setup_draft("2", "45")
+        logic.setup_draft("2", "45", "freeform")
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
         actual = logic.leave_draft("player3", "3")
@@ -521,7 +523,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests trying to leave when valid and checking return value."""
 
         logic = DraftLogic()
-        logic.setup_draft("2", "45")
+        logic.setup_draft("2", "45", "freeform")
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
         actual = logic.leave_draft("player1", "1")
@@ -534,7 +536,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("5", "45")
+        logic.setup_draft("5", "45", "freeform")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -569,7 +571,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("5", "45")
+        logic.setup_draft("5", "45", "freeform")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -605,7 +607,7 @@ class TestDraftLogic(unittest.TestCase):
 
         logic = DraftLogic()
 
-        logic.setup_draft("5", "45")
+        logic.setup_draft("5", "45", "freeform")
 
         logic.join_draft("player1", "1")
         logic.join_draft("player2", "2")
@@ -646,11 +648,11 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("2", "45")
+            logic.setup_draft("2", "45", "freeform")
             logic.join_draft("player1", "1")
             logic.join_draft("player2", "2")
             logic.fire_draft()
-            actual = logic.setup_draft("4", "45")
+            actual = logic.setup_draft("4", "45", "freeform")
             expected = ("The draft has already fired. Please wait for " +
                         "it to be finished before starting another draft.")
             self.assertEqual(actual, expected)
@@ -660,8 +662,8 @@ class TestDraftLogic(unittest.TestCase):
         """Tests setting up a draft when one is already set up."""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
-        actual = logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
+        actual = logic.setup_draft("4", "45", "freeform")
         expected = ("The draft setup has already been completed. " +
                     "To modify the setup use the edit commands.")
         self.assertEqual(actual, expected)
@@ -671,7 +673,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests setting up a draft with invalid input for player count."""
 
         logic = DraftLogic()
-        actual = logic.setup_draft("-1", "45")
+        actual = logic.setup_draft("-1", "45", "freeform")
         expected = "Invalid parameters. Please use the '!help setup' command for details."
         self.assertEqual(actual, expected)
 
@@ -680,7 +682,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests setting up a draft with invalid input for pick count."""
 
         logic = DraftLogic()
-        actual = logic.setup_draft("5", "1000")
+        actual = logic.setup_draft("5", "1000", "freeform")
         expected = "Invalid parameters. Please use the '!help setup' command for details."
         self.assertEqual(actual, expected)
 
@@ -689,7 +691,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests setting up a draft with invalid input for player count."""
 
         logic = DraftLogic()
-        actual = logic.setup_draft("wwwwww", "45")
+        actual = logic.setup_draft("wwwwww", "45", "freeform")
         expected = "Invalid parameters. Please use the '!help setup' command for details."
         self.assertEqual(actual, expected)
 
@@ -698,7 +700,16 @@ class TestDraftLogic(unittest.TestCase):
         """Tests setting up a draft with invalid input for pick count."""
 
         logic = DraftLogic()
-        actual = logic.setup_draft("5", "ergd")
+        actual = logic.setup_draft("5", "ergd", "freeform")
+        expected = "Invalid parameters. Please use the '!help setup' command for details."
+        self.assertEqual(actual, expected)
+
+    def test_setup_draft_invalid_input_5(self):
+
+        """Tests setting up a draft with invalid input for format."""
+
+        logic = DraftLogic()
+        actual = logic.setup_draft("5", "ergd", "aesrdgfh")
         expected = "Invalid parameters. Please use the '!help setup' command for details."
         self.assertEqual(actual, expected)
 
@@ -707,9 +718,10 @@ class TestDraftLogic(unittest.TestCase):
         """Tests valid setup and checking return value."""
 
         logic = DraftLogic()
-        actual = logic.setup_draft("5", "50")
-        expected = ("The draft has been set up. We have 5 players and 50 " +
-                    "picks. Use the !join command to be added to the draft.")
+        actual = logic.setup_draft("5", "50", "freeform")
+        expected = ("The draft has been set up. We have 5 players, 50 " +
+                    "picks, and the format is freeform. Use the " +
+                    "!join command to be added to the draft.")
         self.assertEqual(actual, expected)
 
     def test_setup_draft_valid_2(self):
@@ -717,7 +729,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests valid setup and checking player count"""
 
         logic = DraftLogic()
-        logic.setup_draft("5", "50")
+        logic.setup_draft("5", "50", "freeform")
         actual = logic.player_count
         expected = 5
         self.assertEqual(actual, expected)
@@ -727,7 +739,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests valid setup and checking pick count"""
 
         logic = DraftLogic()
-        logic.setup_draft("5", "50")
+        logic.setup_draft("5", "50", "freeform")
         actual = logic.pick_count
         expected = 50
         self.assertEqual(actual, expected)
@@ -737,7 +749,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests valid setup and checking setup value"""
 
         logic = DraftLogic()
-        logic.setup_draft("5", "50")
+        logic.setup_draft("5", "50", "freeform")
         actual = logic.setup
         expected = True
         self.assertEqual(actual, expected)
@@ -754,7 +766,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("2", "45")
+            logic.setup_draft("2", "45", "freeform")
             logic.join_draft("player1", "1")
             logic.join_draft("player2", "2")
             logic.fire_draft()
@@ -776,7 +788,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing a draft with invalid input"""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         actual = logic.edit_player("wwww")
         expected = "Invalid parameters. Please use the '!help edit_player' command for details."
         self.assertEqual(actual, expected)
@@ -786,7 +798,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing player count with invalid input"""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         actual = logic.edit_player("456778")
         expected = "Invalid parameters. Please use the '!help edit_player' command for details."
         self.assertEqual(actual, expected)
@@ -796,7 +808,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing player count with invalid input"""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         actual = logic.edit_player("-66")
         expected = "Invalid parameters. Please use the '!help edit_player' command for details."
         self.assertEqual(actual, expected)
@@ -806,7 +818,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing a draft with valid input for pick count"""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         actual = logic.edit_player("5")
         expected = "Player count is: 5"
         self.assertEqual(actual, expected)
@@ -816,7 +828,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing a draft with valid input for player count"""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         logic.edit_player("5")
         actual = logic.player_count
         expected = 5
@@ -829,7 +841,7 @@ class TestDraftLogic(unittest.TestCase):
         players in the draft queue. """
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         logic.join_draft("player_1", "1")
         logic.join_draft("player_2", "2")
         logic.join_draft("player_3", "3")
@@ -851,7 +863,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("2", "45")
+            logic.setup_draft("2", "45", "freeform")
             logic.join_draft("player1", "1")
             logic.join_draft("player2", "2")
             logic.fire_draft()
@@ -873,7 +885,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing a draft with invalid input."""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         actual = logic.edit_pick("wwww")
         expected = "Invalid parameters. Please use the '!help edit_pick' command for details."
         self.assertEqual(actual, expected)
@@ -883,7 +895,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing player count with invalid input."""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         actual = logic.edit_pick("456778")
         expected = "Invalid parameters. Please use the '!help edit_pick' command for details."
         self.assertEqual(actual, expected)
@@ -893,7 +905,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing pick count with invalid input."""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         actual = logic.edit_pick("-66")
         expected = "Invalid parameters. Please use the '!help edit_pick' command for details."
         self.assertEqual(actual, expected)
@@ -903,7 +915,7 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing a draft with valid input for pick count."""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         actual = logic.edit_pick("50")
         expected = "Pick count is: 50"
         self.assertEqual(actual, expected)
@@ -913,10 +925,70 @@ class TestDraftLogic(unittest.TestCase):
         """Tests editing a draft with valid input for player count."""
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         logic.edit_pick("50")
         actual = logic.pick_count
         expected = 50
+        self.assertEqual(actual, expected)
+
+    #####################################
+    ###       EDIT FORMAT TESTS       ###
+    #####################################
+
+    def test_edit_format_already_fired(self):
+
+        """Tests editing a draft when it has already fired."""
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("2", "45", "freeform")
+            logic.join_draft("player1", "1")
+            logic.join_draft("player2", "2")
+            logic.fire_draft()
+            actual = logic.edit_format("modern")
+            expected = "The draft has already fired. It cannot be edited."
+            self.assertEqual(actual, expected)
+
+    def test_edit_format_draft_not_setup(self):
+
+        """Tests editing players when draft has not been set up."""
+
+        logic = DraftLogic()
+        actual = logic.edit_format("legacy")
+        expected = "The draft has not been set up. It cannot be edited."
+        self.assertEqual(actual, expected)
+
+    def test_edit_format_invalid_input_1(self):
+
+        """Tests editing a draft with invalid input."""
+
+        logic = DraftLogic()
+        logic.setup_draft("4", "45", "freeform")
+        actual = logic.edit_format("magical format")
+        expected = "Invalid parameters. Please use the '!help edit_format' command for details."
+        self.assertEqual(actual, expected)
+
+    def test_edit_format_valid_1(self):
+
+        """Tests editing a draft with valid input for format."""
+
+        logic = DraftLogic()
+        logic.setup_draft("4", "45", "freeform")
+        actual = logic.edit_format("LEGACy")
+        expected = "Format is: legacy"
+        self.assertEqual(actual, expected)
+
+    def test_edit_format_valid_2(self):
+
+        """Tests editing a draft with valid input for format."""
+
+        logic = DraftLogic()
+        logic.setup_draft("4", "45", "freeform")
+        logic.edit_format("modern")
+        actual = logic.format
+        expected = "modern"
         self.assertEqual(actual, expected)
 
     #####################################
@@ -931,7 +1003,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -998,7 +1070,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1076,7 +1148,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1139,7 +1211,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1174,7 +1246,7 @@ class TestDraftLogic(unittest.TestCase):
         # use mock to ensure we don't call google sheet api
         with patch('botBackend.draft_logic.sheetapi'):
 
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1202,7 +1274,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1227,7 +1299,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1243,6 +1315,32 @@ class TestDraftLogic(unittest.TestCase):
             expected = "That card has already been chosen. Please try again."
             self.assertEqual(actual, expected)
 
+    def test_invalid_pick_invalid_format(self):
+
+        """Tests invalid input with non existent card."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45", "modern")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.invalid_pick('player_1', '1', {'object': 'card', 'name': 'Gush',
+                                                          'legalities': {'modern': 'not_legal'}})
+            expected = "This card is not legal in modern."
+            self.assertEqual(actual, expected)
+
     def test_invalid_pick_not_fired(self):
 
         """Tests invalid input when not fired."""
@@ -1254,7 +1352,7 @@ class TestDraftLogic(unittest.TestCase):
         logic = DraftLogic()
 
         logic = DraftLogic()
-        logic.setup_draft("4", "45")
+        logic.setup_draft("4", "45", "freeform")
         logic.join_draft("player_1", "1")
         logic.join_draft("player_2", "2")
         logic.join_draft("player_3", "3")
@@ -1279,7 +1377,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1308,7 +1406,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1351,7 +1449,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1390,7 +1488,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1432,7 +1530,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1475,7 +1573,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1534,7 +1632,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1558,7 +1656,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1582,7 +1680,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1623,7 +1721,7 @@ class TestDraftLogic(unittest.TestCase):
         # use mock to ensure we don't call google sheet api
         with patch('botBackend.draft_logic.sheetapi'):
 
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1648,7 +1746,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1684,7 +1782,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1708,7 +1806,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1735,7 +1833,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1746,6 +1844,32 @@ class TestDraftLogic(unittest.TestCase):
             actual = logic.invalid_prepick('player_1', '1', {'object': 'card', 'name': 'Gush'})
 
             expected = "You have already pre-picked this card. Please try again."
+            self.assertEqual(actual, expected)
+
+    def test_invalid_prepick_invalid_format(self):
+
+        """Tests invalid input with non existent card."""
+
+        # Use a seed to ensure the random call in the fire
+        # method is always the same. (1 3 4 2 2 4 3 1)
+        random.seed(100)
+
+        logic = DraftLogic()
+
+        # use mock to ensure we don't call google sheet api
+        with patch('botBackend.draft_logic.sheetapi'):
+
+            logic = DraftLogic()
+            logic.setup_draft("4", "45", "modern")
+            logic.join_draft("player_1", "1")
+            logic.join_draft("player_2", "2")
+            logic.join_draft("player_3", "3")
+            logic.join_draft("player_4", "4")
+            logic.fire_draft()
+
+            actual = logic.invalid_prepick('player_4', '4', {'object': 'card', 'name': 'Gush',
+                                           'legalities': {'modern': 'not_legal'}})
+            expected = "This card is not legal in modern."
             self.assertEqual(actual, expected)
 
     #####################################
@@ -1765,7 +1889,7 @@ class TestDraftLogic(unittest.TestCase):
         # use mock to ensure we don't call google sheet api
         with patch('botBackend.draft_logic.sheetapi'):
 
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1791,7 +1915,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1827,7 +1951,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1853,7 +1977,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("4", "45")
+            logic.setup_draft("4", "45", "freeform")
             logic.join_draft("player_1", "1")
             logic.join_draft("player_2", "2")
             logic.join_draft("player_3", "3")
@@ -1886,7 +2010,7 @@ class TestDraftLogic(unittest.TestCase):
         with patch('botBackend.draft_logic.sheetapi'):
 
             logic = DraftLogic()
-            logic.setup_draft("2", "45")
+            logic.setup_draft("2", "45", "freeform")
             logic.join_draft("player1", "1")
             logic.join_draft("player2", "2")
 
@@ -1901,6 +2025,7 @@ class TestDraftLogic(unittest.TestCase):
 
             self.assertFalse(logic.draft_fired)
             self.assertFalse(logic.setup)
+            self.assertIsNone(logic.format)
             self.assertEqual(logic.player_count, 0)
             self.assertEqual(logic.pick_count, 0)
             self.assertEqual(logic.picks, {})

@@ -1,0 +1,27 @@
+```edit_format {new_format}
+
+Allows users to edit the draft format while 
+setting up. The draft must already be set up 
+and cannot be fired for this command to have effect.
+
+    new_format - must be a valid format.
+
+        - "brawl"
+        - "commander"
+        - "duel"
+        - "freeform"
+        - "future"
+        - "gladiator"
+        - "historic"
+        - "legacy"
+        - "modern"
+        - "oldschool"
+        - "pauper"
+        - "penny"
+        - "pioneer"
+        - "premodern"
+        - "standard"
+        - "vintage"
+
+    example: !edit_format modern
+    - Updates the format to be modern.```
