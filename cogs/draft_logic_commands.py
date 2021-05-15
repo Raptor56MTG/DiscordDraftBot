@@ -73,7 +73,7 @@ class DraftLogicCommands(commands.Cog):
 
         if not isinstance(ctx.channel, discord.channel.DMChannel):
             embed = discord.Embed(description=self.logic.join_draft(
-                                  ctx.message.author.name, ctx.author.mention),
+                                  ctx.message.author.name, ctx.author.id),
                                   colour=discord.Color.blue())
             await ctx.send(embed=embed)
 
@@ -84,7 +84,7 @@ class DraftLogicCommands(commands.Cog):
 
         if not isinstance(ctx.channel, discord.channel.DMChannel):
             embed = discord.Embed(description=self.logic.leave_draft(
-                                  ctx.message.author.name, ctx.author.mention),
+                                  ctx.message.author.name, ctx.author.id),
                                   colour=discord.Color.blue())
             await ctx.send(embed=embed)
 
@@ -113,7 +113,7 @@ class DraftLogicCommands(commands.Cog):
 
             # try to make the pick
             embed = discord.Embed(description=self.logic.pick(
-                                  ctx.message.author.name, ctx.author.mention, card),
+                                  ctx.message.author.name, ctx.author.id, card),
                                   colour=discord.Color.blue())
             await ctx.send(embed=embed)
 
@@ -141,7 +141,7 @@ class DraftLogicCommands(commands.Cog):
 
         if isinstance(ctx.channel, discord.channel.DMChannel):
             embed = discord.Embed(description=self.logic.pre_pick(
-                                  ctx.message.author.name, ctx.author.mention, card),
+                                  ctx.message.author.name, ctx.author.id, card),
                                   colour=discord.Color.blue())
             await ctx.send(embed=embed)
         else:
@@ -159,7 +159,7 @@ class DraftLogicCommands(commands.Cog):
 
         if isinstance(ctx.channel, discord.channel.DMChannel):
             embed = discord.Embed(description=self.logic.cancel_pre_pick(
-                                  ctx.message.author.name, ctx.author.mention, card),
+                                  ctx.message.author.name, ctx.author.id, card),
                                   colour=discord.Color.blue())
             await ctx.send(embed=embed)
         else:
@@ -175,7 +175,7 @@ class DraftLogicCommands(commands.Cog):
         """Allows a user to see their prepicks in the draft."""
 
         embed = discord.Embed(description=self.logic.get_pre_picks(
-                              ctx.message.author.name, ctx.author.mention),
+                              ctx.message.author.name, ctx.author.id),
                               colour=discord.Color.blue())
         await ctx.author.send(embed=embed)
 

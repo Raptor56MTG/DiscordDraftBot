@@ -451,6 +451,7 @@ class DraftLogic():
             return "You cannot make pre-picks until the draft has fired."
 
         if Player(username, user_id) not in self.prepicks:
+            print(self.players)
             print(self.prepicks)
             print(username)
             print(user_id)
