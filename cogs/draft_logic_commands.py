@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from decouple import config
 import sys
 sys.path.append('..')
 from botBackend.draft_logic import DraftLogic
@@ -120,12 +121,15 @@ class DraftLogicCommands(commands.Cog):
 
         """Allows a user to pick a card from the draft.
         The draft needs to have fired for this to work."""
+        
+        # get the id of the channel we want to send to
+        channel = self.get_channel(config('CHANNEL_ID'))
 
         # try to make the pick
         embed = discord.Embed(description=self.logic.pick(
                               ctx.message.author.name, ctx.author.id, card),
                               colour=discord.Color.blue())
-        await ctx.send(embed=embed)
+        await channel.send(embed=embed)
 
         # if we have reached the end of the draft.
         if self.logic.picks_remaining == 0 and self.logic.draft_fired:
@@ -141,7 +145,7 @@ class DraftLogicCommands(commands.Cog):
 
             # reset logic for next draft
             self.logic.reset()
-            await ctx.send("Thank you all for playing! Come back soon.")
+            await channel.send("Thank you all for playing! Come back soon.")
 
     @commands.command(aliases=['Pre_pick', 'Prepick', 'prepick', 'Pp', 'pp'])
     async def pre_pick(self, ctx, *card: str):
