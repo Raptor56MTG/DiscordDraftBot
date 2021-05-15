@@ -232,7 +232,7 @@ class DraftLogic():
 
             # append usernames to sheet
             player_names = [player.username for player in self.players]
-            # sheetapi.setup_sheet(player_names, self.pick_count)
+            sheetapi.setup_sheet(player_names, self.pick_count)
 
             return ("Setup has been completed.\n\nSheet is available here: " +
                     f"{config('DOCS_LINK')}\n\n" +
@@ -266,7 +266,7 @@ class DraftLogic():
         # see if there are any prepicks that can be made
         pre_picks_made = self.iterate_prepicks()
 
-        # informs us about the picks and prepicks made 
+        # informs us about the picks and prepicks made
         statement = ""
         statement += f'{username} has chosen {card_json["name"]}.\n'
         for pre_pick in pre_picks_made:
@@ -275,7 +275,8 @@ class DraftLogic():
         if self.picks_remaining > 0:
             statement += f'{self.snake_player_list[self.active_player_index].user_id} is up.'
         else:
-            statement += "Congrats! The draft has been finished! Decks and pictures will arrive shortly."
+            statement += ("Congrats! The draft has been finished! " +
+                          "Decks and pictures will arrive shortly.")
 
         return statement
 
@@ -327,7 +328,7 @@ class DraftLogic():
 
         # iterate through all of the players
         for player in self.prepicks:
-            
+
             # if the most recent pick is in their prepicks, remove it
             if card in self.prepicks[player]:
                 self.prepicks[player].remove(card)
