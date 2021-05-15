@@ -384,7 +384,7 @@ class DraftLogic():
         # otherwise if valid make the pre pick
         self.prepicks[Player(username, user_id)].append(card_json["name"])
 
-        return f'You have successfully picked: {card_json["name"]}.'
+        return f'You have successfully pre-picked: {card_json["name"]}.'
 
     def cancel_pre_pick(self, username: str, user_id: str, card: tuple) -> str:
 

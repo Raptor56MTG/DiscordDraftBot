@@ -35,8 +35,8 @@ def __add_picks_incrementer(worksheet: object, picks: int):
     row_incrementer = 2
     column = 1
 
-    # save word "player" to (1,1) square
-    worksheet.update_cell(row_player, column, "Players")
+    # save word "Picks" to (1,1) square
+    worksheet.update_cell(row_player, column, "Picks")
 
     # number the first column starting at row 2
     # from numbers 1 to n where n is the pick count
