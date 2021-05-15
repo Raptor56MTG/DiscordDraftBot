@@ -145,7 +145,7 @@ class DraftLogicCommands(commands.Cog):
 
         # send it to that channel (dm or public)
         await ctx.send(embed=embed)
-        
+
         # if it was in dm's, make sure it also goes public
         if isinstance(ctx.channel, discord.channel.DMChannel):
             await channel.send(embed=embed)

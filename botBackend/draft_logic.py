@@ -346,19 +346,6 @@ class DraftLogic():
 
         return total_picks
 
-    def prepicks_update(self, card: str):
-
-        """This goes through the prepicks, and it removes
-        any prepicks that match the pick that was just made.
-        This will ensure that there are no redundant picks made."""
-
-        # iterate through all of the players
-        for player in self.prepicks:
-
-            # if the most recent pick is in their prepicks, remove it
-            if card in self.prepicks[player]:
-                self.prepicks[player].remove(card)
-
     def invalid_pick(self, username: str, user_id: str, card_json: dict):
 
         """Determines if a pick was invalid."""
@@ -382,6 +369,10 @@ class DraftLogic():
 
         return None
 
+    ###################################
+    ###    PICK UPDATE PIPELINE     ###
+    ###################################
+
     def row_update(self):
         self.row += self.row_move[self.active_player_index]
 
@@ -393,6 +384,19 @@ class DraftLogic():
 
     def picks_remaining_update(self):
         self.picks_remaining -= 1
+
+    def prepicks_update(self, card: str):
+
+        """This goes through the prepicks, and it removes
+        any prepicks that match the pick that was just made.
+        This will ensure that there are no redundant picks made."""
+
+        # iterate through all of the players
+        for player in self.prepicks:
+
+            # if the most recent pick is in their prepicks, remove it
+            if card in self.prepicks[player]:
+                self.prepicks[player].remove(card)
 
     ###################################
     ###    DRAFT PRE-PICK LOGIC     ###
