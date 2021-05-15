@@ -129,19 +129,22 @@ class DraftLogicCommands(commands.Cog):
         embed = discord.Embed(description=self.logic.pick(
                               ctx.message.author.name, ctx.author.id, card),
                               colour=discord.Color.blue())
+        
+        # send it in both dm and public so everyone knows
+        await ctx.send(embed=embed)
         await channel.send(embed=embed)
 
         # if we have reached the end of the draft.
         if self.logic.picks_remaining == 0 and self.logic.draft_fired:
 
             # send deck files
-            await self.generate_text_files(ctx)
+            await self.generate_text_files(channel)
 
             # take a screenshot
             take_screenshot()
             with open('completed_draft.png', 'rb') as f:
                 picture = discord.File(f)
-                await ctx.send(file=picture)
+                await channel.send(file=picture)
 
             # reset logic for next draft
             self.logic.reset()
@@ -196,7 +199,7 @@ class DraftLogicCommands(commands.Cog):
     ###   HELPER FUNCTIONS   ###
     ############################
 
-    async def generate_text_files(self, ctx):
+    async def generate_text_files(self, channel):
 
         """This generates the text file for the users. I am not a fan
         of having this logic outside of the  pick logic, but it is what
@@ -211,7 +214,7 @@ class DraftLogicCommands(commands.Cog):
 
             # send them their text file
             with open("deck.txt", "rb") as file:
-                await ctx.send(f"{player.username}'s deck",
+                await channel.send(f"{player.username}'s deck",
                                file=discord.File(file, "rotisserie_deck.txt"))
 
             # clear the text file so we can refill it with the next deck.
