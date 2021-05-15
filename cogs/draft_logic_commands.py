@@ -123,7 +123,7 @@ class DraftLogicCommands(commands.Cog):
         The draft needs to have fired for this to work."""
         
         # get the id of the channel we want to send to
-        channel = self.get_channel(config('CHANNEL_ID'))
+        channel = self.bot.get_channel(config('CHANNEL_ID'))
 
         # try to make the pick
         embed = discord.Embed(description=self.logic.pick(
