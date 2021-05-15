@@ -12,8 +12,7 @@ def take_screenshot():
     options.headless = True
 
     # set up driver based on executable and url location
-    PATH = config('CHROMEDRIVER_PATH')
-    driver = webdriver.Chrome(options=options, executable_path=PATH)
+    driver = webdriver.Chrome(options=options)
 
     # set size of image for screenshot
     driver.set_window_size(1325, 1200)
