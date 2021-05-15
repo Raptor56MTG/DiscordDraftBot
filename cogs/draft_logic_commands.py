@@ -138,6 +138,9 @@ class DraftLogicCommands(commands.Cog):
         # get the id of the channel we want to send to
         channel = self.bot.get_channel(int(config('CHANNEL_ID')))
 
+        # don't love this but it's w/e
+        before = self.logic.picks_remaining
+
         # try to make the pick
         embed = discord.Embed(description=self.logic.pick(
                               ctx.message.author.name, ctx.author.id, card),
@@ -146,8 +149,8 @@ class DraftLogicCommands(commands.Cog):
         # send it to that channel (dm or public)
         await ctx.send(embed=embed)
 
-        # if it was in dm's, make sure it also goes public
-        if isinstance(ctx.channel, discord.channel.DMChannel):
+        # if it was in dm's and a sucessful pick, make sure it also goes public
+        if isinstance(ctx.channel, discord.channel.DMChannel) and self.logic.picks_remaining < before:
             await channel.send(embed=embed)
 
         # if we have reached the end of the draft.
