@@ -16,31 +16,37 @@ class TestHelpCommands(unittest.TestCase):
                     "Here are my commands and their parameters:\n\n" +
                     "1. cancel\n" +
                     "    - Cancels the draft during setup if no one joined.\n\n"
-                    "2. card\n" +
+                    "2. cancelprepick\n" +
+                    "    - Allows the user to cancel a prepick.\n\n" +
+                    "3. card\n" +
                     "    - Displays the image of the card provided it exists.\n\n" +
-                    "3. edit_pick\n" +
+                    "4. edit_pick\n" +
                     "    - Edit number of picks in the draft during setup.\n\n" +
-                    "4. edit_player\n" +
+                    "5. edit_player\n" +
                     "    - Edit number of players in the draft during setup.\n\n" +
-                    "5. fire\n" +
-                    "    - fires the draft once setup is complete.\n\n" +
-                    "6. help\n" +
+                    "6. fire\n" +
+                    "    - Fires the draft once setup is complete.\n\n" +
+                    "7. getprepicks\n" +
+                    "    - Allows the user to get a list of their prepicks.\n\n"
+                    "8. help\n" +
                     "    - Displays the helpful message you are currently seeing.\n\n" +
-                    "7. info\n" +
+                    "9. info\n" +
                     "    - Displays information on the setup of the draft.\n\n" +
-                    "8. join\n" +
+                    "10. join\n" +
                     "    - Allows a user to join a draft.\n\n" +
-                    "9. leave\n" +
+                    "11. leave\n" +
                     "    - Allows a user to leave the draft during the setup\n" +
                     "      stage.\n\n" +
-                    "10. legal\n" +
+                    "12. legal\n" +
                     "    - States the legality of a card.\n\n" +
-                    "11. pick\n" +
+                    "13. pick\n" +
                     "    - Allows a user to pick a card during the draft.\n\n" +
-                    "12. remind\n" +
-                    "    - reminds a user to pick a card when the draft\n" +
+                    "14. prepicks\n" +
+                    "    - Allows the user to prepick a card.\n\n" +
+                    "15. remind\n" +
+                    "    - Reminds a user to pick a card when the draft\n" +
                     "      has fired and is running.\n\n" +
-                    "13. setup\n" +
+                    "16. setup\n" +
                     "    - Sets up a draft with a specified player and pick count.\n\n" +
                     "Type !help {command} for more info on a command.```")
 

@@ -4,42 +4,51 @@ Here are my commands and their parameters:
 1. cancel
     - Cancels the draft during setup if no one joined.
 
-2. card
+2. cancelprepick
+    - Allows the user to cancel a prepick.
+
+3. card
     - Displays the image of the card provided it exists.
 
-3. edit_pick
+4. edit_pick
     - Edit number of picks in the draft during setup.
 
-4. edit_player
+5. edit_player
     - Edit number of players in the draft during setup.
 
-5. fire
-    - fires the draft once setup is complete.
+6. fire
+    - Fires the draft once setup is complete.
 
-6. help
+7. getprepicks
+    - Allows the user to get a list of their prepicks.
+
+8. help
     - Displays the helpful message you are currently seeing.
 
-7. info
+9. info
     - Displays information on the setup of the draft.
 
-8. join
+10. join
     - Allows a user to join a draft.
 
-9. leave
+11. leave
     - Allows a user to leave the draft during the setup
       stage.
 
-10. legal
+12. legal
     - States the legality of a card.
 
-11. pick
+13. pick
     - Allows a user to pick a card during the draft.
 
-12. remind
-    - reminds a user to pick a card when the draft
+14. prepicks
+    - Allows the user to prepick a card.
+
+15. remind
+    - Reminds a user to pick a card when the draft
       has fired and is running.
 
-13. setup
+16. setup
     - Sets up a draft with a specified player and pick count.
 
 Type !help {command} for more info on a command.```

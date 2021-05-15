@@ -134,7 +134,7 @@ class DraftLogicCommands(commands.Cog):
 
                 await ctx.send("Thank you all for playing! Come back soon.")
 
-    @commands.command(aliases=['Pre_pick', 'Prepick', 'prepick', 'pp'])
+    @commands.command(aliases=['Pre_pick', 'Prepick', 'prepick', 'Pp', 'pp'])
     async def pre_pick(self, ctx, *card: str):
 
         """Allows users to make pre-picks in the draft."""
@@ -152,7 +152,7 @@ class DraftLogicCommands(commands.Cog):
     @commands.command(aliases=['Cancel_pre_pick',
                                'Cancelprepick', 'cancelprepick',
                                'Cancel_prepick', 'cancel_prepick',
-                               'cpp'])
+                               'Cpp', 'cpp'])
     async def cancel_pre_pick(self, ctx, *card: str):
 
         """Allows users to cancel pre-picks in the draft."""
@@ -169,7 +169,8 @@ class DraftLogicCommands(commands.Cog):
 
     @commands.command(aliases=['Get_pre_picks',
                                'Get_prepicks', 'get_prepicks',
-                               'Getprepicks', 'getprepicks', 'gpp'])
+                               'Getprepicks', 'getprepicks', 
+                               'Gpp', 'gpp'])
     async def get_pre_picks(self, ctx):
 
         """Allows a user to see their prepicks in the draft."""

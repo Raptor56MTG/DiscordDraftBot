@@ -1,0 +1,18 @@
+```
+getprepicks
+
+Allows a user to get their list of prepicks in the draft.
+provided the draft has fired.
+
+    example: !getprepicks
+    - The drafter sees all their pre-picks.
+    
+    alternate command names for getprepick:
+    
+    - 'Getprepicks'
+    - 'Get_pre_picks'
+    - 'get_pre_picks'
+    - 'Get_prepicks'
+    - 'get_prepicks'
+    - 'Gpp'
+    - 'gpp'```

@@ -1,0 +1,18 @@
+```
+cancelprepick {card}
+
+Allows a user to cancel a pre-pick they made provided
+the draft has fired, and pre-picks are not being executed.
+
+    example: cancelprepick Gush
+    - The drafter cancels their Gush pick.
+    
+    alternate command names for cancelprepick:
+ 
+    - 'Cancelprepick'
+    - 'Cancel_pre_pick'
+    - 'cancel_pre_pick'
+    - 'Cancel_prepick' 
+    - 'cancel_prepick'
+    - 'Cpp'
+    - 'cpp'```

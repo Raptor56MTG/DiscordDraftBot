@@ -1,0 +1,16 @@
+```
+prepick {card}
+
+Allows a user to prepick a card during the draft provided
+the draft has fired and the card has not been picked before.
+
+    example: !prepick lightning bolt
+    - The drafter prepicks the card lightning bolt.
+    
+    alternate command names for prepick:
+
+    - 'Prepick'
+    - 'Pre_pick'
+    - 'pre_pick'
+    - 'Pp'
+    - 'pp'```
