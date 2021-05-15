@@ -41,7 +41,7 @@ class TestHelpCommands(unittest.TestCase):
                     "    - States the legality of a card.\n\n" +
                     "13. pick\n" +
                     "    - Allows a user to pick a card during the draft.\n\n" +
-                    "14. prepicks\n" +
+                    "14. prepick\n" +
                     "    - Allows the user to prepick a card.\n\n" +
                     "15. remind\n" +
                     "    - Reminds a user to pick a card when the draft\n" +

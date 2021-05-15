@@ -169,7 +169,7 @@ class DraftLogicCommands(commands.Cog):
 
     @commands.command(aliases=['Get_pre_picks',
                                'Get_prepicks', 'get_prepicks',
-                               'Getprepicks', 'getprepicks', 
+                               'Getprepicks', 'getprepicks',
                                'Gpp', 'gpp'])
     async def get_pre_picks(self, ctx):
 
