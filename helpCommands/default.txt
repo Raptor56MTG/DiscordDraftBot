@@ -41,7 +41,7 @@ Here are my commands and their parameters:
 13. pick
     - Allows a user to pick a card during the draft.
 
-14. prepicks
+14. prepick
     - Allows the user to prepick a card.
 
 15. remind
