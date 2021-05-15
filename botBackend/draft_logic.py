@@ -451,6 +451,9 @@ class DraftLogic():
             return "You cannot make pre-picks until the draft has fired."
 
         if Player(username, user_id) not in self.prepicks:
+            print(self.prepicks)
+            print(username)
+            print(user_id)
             return "You are not in this draft and cannot make pre-picks."
 
         if card_json["object"] == "error":
