@@ -10,6 +10,8 @@ def take_screenshot():
     # allow driver to be headless
     options = Options()
     options.headless = True
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
     options.binary_location = config('GOOGLE_CHROME_BIN')
 
     PATH = config('CHROMEDRIVER_PATH')
