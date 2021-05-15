@@ -115,7 +115,7 @@ def __load_worksheet():
     so we can start performing operations on it."""
 
     # load in the credentials file / json
-    serviceAccount = gspread.service_account(filename='credentials.json')
+    serviceAccount = gspread.service_account(filename='google-credentials.json')
 
     # grab the sheet I'm sharing by opening with the key in the url
     sheet = serviceAccount.open_by_key(config('GOOGLE_SHEET_URL_KEY'))
