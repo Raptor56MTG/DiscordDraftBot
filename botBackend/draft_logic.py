@@ -236,7 +236,7 @@ class DraftLogic():
 
             return ("Setup has been completed.\n\nSheet is available here: " +
                     f"{config('DOCS_LINK')}\n\n" +
-                    f"{self.snake_player_list[0].user_id} is up first.")
+                    f"{self.snake_player_list[0].username} is up first.")
 
     def pick(self, username: str, user_id: str, card: tuple) -> str:
 
@@ -273,7 +273,7 @@ class DraftLogic():
             statement += f'{pre_pick[0]} has chosen {pre_pick[1]}.\n'
 
         if self.picks_remaining > 0:
-            statement += f'{self.snake_player_list[self.active_player_index].user_id} is up.'
+            statement += f'{self.snake_player_list[self.active_player_index].username} is up.'
         else:
             statement += ("Congrats! The draft has been finished! " +
                           "Decks and pictures will arrive shortly.")
@@ -451,10 +451,6 @@ class DraftLogic():
             return "You cannot make pre-picks until the draft has fired."
 
         if Player(username, user_id) not in self.prepicks:
-            print(self.players)
-            print(self.prepicks)
-            print(username)
-            print(user_id)
             return "You are not in this draft and cannot make pre-picks."
 
         if card_json["object"] == "error":

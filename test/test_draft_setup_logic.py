@@ -267,7 +267,7 @@ class TestDraftLogic(unittest.TestCase):
             actual = logic.fire_draft()
             expected = ("Setup has been completed.\n\nSheet is available here: " +
                         f"{config('DOCS_LINK')}\n\n" +
-                        "3 is up first.")
+                        "player_3 is up first.")
 
             self.assertEqual(actual, expected)
 
@@ -1893,7 +1893,7 @@ class TestDraftLogic(unittest.TestCase):
             actual = logic.fire_draft()
             expected = ("Setup has been completed.\n\nSheet is available here: " +
                         f"{config('DOCS_LINK')}\n\n" +
-                        "2 is up first.")
+                        "player2 is up first.")
 
             self.assertEqual(actual, expected)
 
