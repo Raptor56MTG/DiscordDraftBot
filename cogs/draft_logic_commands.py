@@ -143,9 +143,12 @@ class DraftLogicCommands(commands.Cog):
                               ctx.message.author.name, ctx.author.id, card),
                               colour=discord.Color.blue())
 
-        # send it in both dm and public so everyone knows
+        # send it to that channel (dm or public)
         await ctx.send(embed=embed)
-        await channel.send(embed=embed)
+        
+        # if it was in dm's, make sure it also goes public
+        if isinstance(ctx.channel, discord.channel.DMChannel):
+            await channel.send(embed=embed)
 
         # if we have reached the end of the draft.
         if self.logic.picks_remaining == 0 and self.logic.draft_fired:
