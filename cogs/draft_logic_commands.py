@@ -138,7 +138,7 @@ class DraftLogicCommands(commands.Cog):
         # get the id of the channel we want to send to
         channel = self.bot.get_channel(int(config('CHANNEL_ID')))
 
-        # don't love this but it's w/e
+        # don't love this but it's w/e (way to check if successful pick)
         before = self.logic.picks_remaining
 
         # try to make the pick

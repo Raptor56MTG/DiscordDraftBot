@@ -32,7 +32,7 @@ class BotEvents(commands.Cog):
             await ctx.send(embed=embed)
 
         else:
-            print(error)  # used for debugbing / testing
+            # print(error)  # used for debugbing / testing
             return  # silent failure for anything else.
 
 

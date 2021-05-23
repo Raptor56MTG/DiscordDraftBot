@@ -1,3 +1,0 @@
-This is a placeholder for your chromedriver executable. 
-I am not including this in the project as having an 
-executable in a repo is not ideal in my mind. 
