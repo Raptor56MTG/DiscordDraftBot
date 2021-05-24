@@ -4,7 +4,7 @@ This is the code for the DraftBot Discord Bot used to play Rotissare Drafts.
 
 ## Important Information / Common questions
 
-### What does this bot do??
+### What does this bot do?
 
    The goal of this bot is to fully automate a rotisserie draft. This includes
    picking cards, generating decklists, and taking a screenshot of the finished
