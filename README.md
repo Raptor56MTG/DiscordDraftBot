@@ -17,7 +17,7 @@ This is the code for the DraftBot Discord Bot used to play Rotissare Drafts.
 
 - dependencies and environment are both handled with pipenv.
 - You can host this anywhere, but I will specify how to set this up on Heroku.
-- I have included some example txt files as placeholders for credentials, links, and keys. These are mostly there to help you ensure you have everything you need and should be deleted later on.
+- I have included some example txt files as placeholders for credentials, links, and keys. These will help you ensure you have everything you need and should be deleted later on.
 - Make sure that keys, tokens, credentials, links, and other secrets do not get published or posted in the wrong places! Store them as secrets in a secure manner. I have placeholders for these in the example text files. These can be used to help ensure you have all the needed credentials, and can be deleted afterwards.
 
 ## Setup steps
