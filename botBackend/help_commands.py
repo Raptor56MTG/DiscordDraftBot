@@ -5,10 +5,8 @@ def help_draft(command: str) -> str:
     try:
         fileName = f"{command.lower()}.txt"
 
-        help_message = ""
-        with open(f"helpCommands/{fileName}", "r") as help_text:
-            for line in help_text:
-                help_message += line
+        with open(f"helpCommands/{fileName}", "r") as f:
+            help_message = ''.join(f.readlines())
 
         return help_message
 
