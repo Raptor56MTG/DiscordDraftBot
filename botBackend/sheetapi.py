@@ -9,15 +9,15 @@ def setup_sheet(players: list, picks: int):
     This includes player names, pick count, and color."""
 
     # grab the sheet object so we can use it
-    worksheet = __load_worksheet()
+    worksheet = _load_worksheet()
 
     # sheet setup pipeline
-    __add_picks_incrementer(worksheet, picks)
-    __add_players(worksheet, players)
-    __add_color(worksheet, players, picks)
+    _add_picks_incrementer(worksheet, picks)
+    _add_players(worksheet, players)
+    _add_color(worksheet, players, picks)
 
 
-def __add_picks_incrementer(worksheet: object, picks: int):
+def _add_picks_incrementer(worksheet: object, picks: int):
 
     """Adds an incrementer to the first column
     in the sheet for the total number of picks. If
@@ -45,7 +45,7 @@ def __add_picks_incrementer(worksheet: object, picks: int):
         worksheet.update_cell(i + row_incrementer, column, i + 1)  # row column info
 
 
-def __add_players(worksheet: object, players: list):
+def _add_players(worksheet: object, players: list):
 
     """Add the names of the players to the sheet."""
 
@@ -58,7 +58,7 @@ def __add_players(worksheet: object, players: list):
         worksheet.update_cell(row, i + columnShift, str(players[i]))  # row / column
 
 
-def __add_color(worksheet: object, players: list, picks: int):
+def _add_color(worksheet: object, players: list, picks: int):
 
     """This adds colors to the columns of the
     players that are drafting. A unique color
@@ -109,7 +109,7 @@ def __add_color(worksheet: object, players: list, picks: int):
         format_cell_range(worksheet, cardColumns[i], cellColor)
 
 
-def __load_worksheet():
+def _load_worksheet():
 
     """Gets the worksheet in our google doc
     so we can start performing operations on it."""
@@ -130,7 +130,7 @@ def pick(card_name: str, row: int, column: int):
 
     """Adds pick to the sheet."""
 
-    worksheet = __load_worksheet()
+    worksheet = _load_worksheet()
     worksheet.update_cell(row, column, card_name)
 
 
@@ -139,7 +139,7 @@ def reset_sheet():
     """This clears the data on the sheet so it can
     be ready for the next draft."""
 
-    worksheet = __load_worksheet()
+    worksheet = _load_worksheet()
 
     # remove all values
     worksheet.clear()

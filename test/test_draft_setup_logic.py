@@ -834,7 +834,7 @@ class TestDraftLogic(unittest.TestCase):
         expected = 5
         self.assertEqual(actual, expected)
 
-    def test_edit__player_too_small(self):
+    def test_edit_player_too_small(self):
 
         """Tests editing a draft with valid input for player
         count but is smaller than the current number of
