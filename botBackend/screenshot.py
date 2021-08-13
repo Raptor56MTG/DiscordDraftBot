@@ -7,7 +7,6 @@ def take_screenshot():
     """This takes a screenshot of the sheet after the draft is over.
     This will then be posted to the server for future reference."""
 
-    # allow driver to be headless
     options = Options()
     options.headless = True
     options.add_argument('--no-sandbox')
@@ -15,7 +14,6 @@ def take_screenshot():
     options.binary_location = config('GOOGLE_CHROME_BIN')
 
     PATH = config('CHROMEDRIVER_PATH')
-    # set up driver based on executable and url location
     driver = webdriver.Chrome(options=options, executable_path=PATH)
 
     # set size of image for screenshot
