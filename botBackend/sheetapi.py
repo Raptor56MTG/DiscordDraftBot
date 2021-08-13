@@ -17,6 +17,29 @@ def setup_sheet(players: list, picks: int):
     _add_color(worksheet, players, picks)
 
 
+def pick(card_name: str, row: int, column: int):
+
+    """Adds pick to the sheet."""
+
+    worksheet = _load_worksheet()
+    worksheet.update_cell(row, column, card_name)
+
+
+def reset_sheet():
+
+    """This clears the data on the sheet so it can
+    be ready for the next draft."""
+
+    worksheet = _load_worksheet()
+
+    # remove all values
+    worksheet.clear()
+
+    # remove color (set all to white)
+    fmt = CellFormat(backgroundColor=Color(1, 1, 1))
+    format_cell_ranges(worksheet, [('A:J', fmt)])
+
+
 def _add_picks_incrementer(worksheet: object, picks: int):
 
     """Adds an incrementer to the first column
@@ -124,26 +147,3 @@ def _load_worksheet():
     worksheet = sheet.sheet1
 
     return worksheet
-
-
-def pick(card_name: str, row: int, column: int):
-
-    """Adds pick to the sheet."""
-
-    worksheet = _load_worksheet()
-    worksheet.update_cell(row, column, card_name)
-
-
-def reset_sheet():
-
-    """This clears the data on the sheet so it can
-    be ready for the next draft."""
-
-    worksheet = _load_worksheet()
-
-    # remove all values
-    worksheet.clear()
-
-    # remove color (set all to white)
-    fmt = CellFormat(backgroundColor=Color(1, 1, 1))
-    format_cell_ranges(worksheet, [('A:J', fmt)])
