@@ -77,8 +77,8 @@ def _add_players(worksheet: object, players: list):
     # shift over by 2 since index = 0 and we want to start at column 2
     columnShift = 2
 
-    for i in range(len(players)):
-        worksheet.update_cell(row, i + columnShift, str(players[i]))  # row / column
+    for i, player in enumerate(players):
+        worksheet.update_cell(row, i + columnShift, str(player))  # row / column
 
 
 def _add_color(worksheet: object, players: list, picks: int):
@@ -92,7 +92,7 @@ def _add_color(worksheet: object, players: list, picks: int):
     # this is RGB in range of (0 - 1) * 255
     # order of colors:
     # 0 - red - (248, 118, 118) ------- (244, 204, 204)
-    # 1 - turqiouse - (122, 240, 255) ------- (224, 247, 250)
+    # 1 - turquoise - (122, 240, 255) ------- (224, 247, 250)
     # 2 - green - (132, 255, 187) ------- (231, 249, 239)
     # 3 - yellow - (255, 226, 123) ------- (254, 248, 227)
     # 4 - orange - (255, 142, 101) ------- (255, 230, 221)
@@ -121,7 +121,7 @@ def _add_color(worksheet: object, players: list, picks: int):
                    'F2:F' + str(picks + shift), 'G2:G' + str(picks + shift),
                    'H2:H' + str(picks + shift), 'I2:I' + str(picks + shift)]
 
-    for i in range(len(players)):
+    for i, _ in enumerate(players):
         playerColor = CellFormat(backgroundColor=Color(colorPlayerNames[i][0],
                                                        colorPlayerNames[i][1],
                                                        colorPlayerNames[i][2]))
