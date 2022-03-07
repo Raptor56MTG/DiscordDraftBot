@@ -135,9 +135,6 @@ class DraftLogicCommands(commands.Cog):
         """Allows a user to pick a card from the draft.
         The draft needs to have fired for this to work."""
 
-        # get the id of the channel we want to send to
-        channel = self.bot.get_channel(int(config('CHANNEL_ID')))
-
         # don't love this but it's w/e (way to check if successful pick)
         before = self.logic.picks_remaining
 
@@ -151,7 +148,7 @@ class DraftLogicCommands(commands.Cog):
 
         # if it was in dm's and a sucessful pick, make sure it also goes public
         if isinstance(ctx.channel, discord.channel.DMChannel) and self.logic.picks_remaining < before:
-            await channel.send(embed=embed)
+            await ctx.send(embed=embed)
 
         # if we have reached the end of the draft.
         if self.logic.picks_remaining == 0 and self.logic.draft_fired:
@@ -163,11 +160,11 @@ class DraftLogicCommands(commands.Cog):
             take_screenshot()
             with open('completed_draft.png', 'rb') as f:
                 picture = discord.File(f)
-                await channel.send(file=picture)
+                await ctx.send(file=picture)
 
             # reset logic for next draft
             self.logic.reset()
-            await channel.send("Thank you all for playing! Come back soon.")
+            await ctx.send("Thank you all for playing! Come back soon.")
 
     @commands.command(aliases=['Pre_pick', 'Prepick', 'prepick', 'Pp', 'pp'])
     async def pre_pick(self, ctx, *card: str):
