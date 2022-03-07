@@ -154,7 +154,7 @@ class DraftLogicCommands(commands.Cog):
         if self.logic.picks_remaining == 0 and self.logic.draft_fired:
 
             # send deck files
-            await self.generate_text_files(channel)
+            await self.generate_text_files(ctx)
 
             # take a screenshot
             take_screenshot()
