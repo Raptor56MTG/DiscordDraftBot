@@ -49,3 +49,4 @@ I use flake8 to help enforce PEP8 rules.
 # Testing
 
 If you want to test the code, use 'python -m unittest'.
+This repo uses basic Github CI for pull requests via flake8 and unit tests.
