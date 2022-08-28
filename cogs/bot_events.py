@@ -36,5 +36,5 @@ class BotEvents(commands.Cog):
             return  # silent failure for anything else.
 
 
-def setup(bot):
-    bot.add_cog(BotEvents(bot))
+async def setup(bot):
+    await bot.add_cog(BotEvents(bot))

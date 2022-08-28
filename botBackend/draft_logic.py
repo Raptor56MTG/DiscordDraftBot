@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from decouple import config
 import random
+import json
 from botBackend import scryfallapi
 from botBackend import sheetapi
 
@@ -34,24 +35,25 @@ class DraftLogic():
                         "pioneer", "modern", "legacy", "pauper",
                         "vintage", "penny", "commander", "brawl",
                         "duel", "oldschool", "premodern", "freeform"]
-        # setup values
+
+        # setup values back to defaults
         self.player_count = 0
         self.pick_count = 0
         self.players = []
-        self.picks = {}
-        self.prepicks = {}
-        self.setup = False
         self.draft_fired = False
+        self.setup = False
         self.format = None
 
         # pick values and info to inform the google
         # sheet api where to move.
+        self.picks = {}
+        self.prepicks = {}
         self.active_player_index = 0
         self.row = 2
         self.column = 2
         self.row_move = []
         self.column_move = []
-        self.picks_remaining = []
+        self.picks_remaining = 0
         self.snake_player_list = []
 
     ###################################
@@ -86,7 +88,7 @@ class DraftLogic():
             info = (f"```player_count is: {self.player_count}\n" +
                     f"pick_count is: {self.pick_count}\n" +
                     f"draft_fired status is: {self.draft_fired}\n" +
-                    f'format is: {self.format}\n' +
+                    f"format is: {self.format}\n" +
                     "Current joined drafters are:\n")
 
             for player in self.players:
@@ -260,6 +262,9 @@ class DraftLogic():
             player_names = [player.username for player in self.players]
             sheetapi.setup_sheet(player_names, self.pick_count)
 
+            # backup the state of the draft
+            self.backup()
+
             return ("Setup has been completed.\n\nSheet is available here: " +
                     f"{config('DOCS_LINK')}\n\n" +
                     f"{self.snake_player_list[0].username} is up first.")
@@ -292,14 +297,17 @@ class DraftLogic():
         # see if there are any prepicks that can be made
         pre_picks_made = self.iterate_prepicks()
 
+        # backup the state of the draft
+        self.backup()
+
         # informs us about the picks and prepicks made
         statement = ""
-        statement += f'{username} has chosen {card_json["name"]}.\n'
+        statement += f"{username} has chosen {card_json['name']}.\n"
         for pre_pick in pre_picks_made:
-            statement += f'{pre_pick[0]} has chosen {pre_pick[1]}.\n'
+            statement += f"{pre_pick[0]} has chosen {pre_pick[1]}.\n"
 
         if self.picks_remaining > 0:
-            statement += f'{self.snake_player_list[self.active_player_index].username} is up.'
+            statement += f"{self.snake_player_list[self.active_player_index].username} is up."
         else:
             statement += ("Congrats! The draft has been finished! " +
                           "Decks and pictures will arrive shortly.")
@@ -364,7 +372,8 @@ class DraftLogic():
         if card_json["name"] in [cards for picks in self.picks.values() for cards in picks]:
             return "That card has already been chosen. Please try again."
 
-        if self.format != 'freeform' and card_json["legalities"][self.format] != 'legal':
+        if (self.format != "freeform" and card_json["legalities"][self.format] == "banned" or
+           card_json["legalities"][self.format] == "not_legal"):
             return f"This card is not legal in {self.format}."
 
         return None
@@ -417,7 +426,10 @@ class DraftLogic():
         # otherwise if valid make the pre pick
         self.prepicks[Player(username, user_id)].append(card_json["name"])
 
-        return f'You have successfully pre-picked: {card_json["name"]}.'
+        # backup the prepick list
+        self.backup()
+
+        return f"You have successfully pre-picked: {card_json['name']}."
 
     def cancel_pre_pick(self, username: str, user_id: str, card: tuple) -> str:
 
@@ -433,7 +445,11 @@ class DraftLogic():
 
         # otherwise remove prepick
         self.prepicks[Player(username, user_id)].remove(card_json["name"])
-        return f'You have successfully removed: {card_json["name"]}.'
+
+        # backup the prepick list
+        self.backup()
+
+        return f"You have successfully removed: {card_json['name']}."
 
     def get_pre_picks(self, username, user_id) -> str:
 
@@ -486,7 +502,8 @@ class DraftLogic():
         if card_json["object"] == "error":
             return "This card does not exist."
 
-        if self.format != 'freeform' and card_json["legalities"][self.format] != 'legal':
+        if (self.format != "freeform" and card_json["legalities"][self.format] == "banned" or
+           card_json["legalities"][self.format] == "not_legal"):
             return f"This card is not legal in {self.format}."
 
         # used list comprehension here to combine all the lists
@@ -524,8 +541,80 @@ class DraftLogic():
         self.column = 2
         self.row_move = []
         self.column_move = []
-        self.picks_remaining = []
+        self.picks_remaining = 0
         self.snake_player_list = []
+
+        # backup the state of the draft to being reset
+        self.backup()
 
         # call sheet api to reset
         sheetapi.reset_sheet()
+
+    ###################################
+    ###      BACKUP DRAFT LOGIC     ###
+    ###################################
+
+    def backup(self):
+        """This stores all values in cache into a backup
+        json file to cover the case where the bot crashes.
+        This ensures the bot can be reloaded and the draft
+        can pick up from where it left off. I will note
+        that this is a bit yucky / manual due to dataclasses
+        not being jsonable. As a result, I have to manual this a bit."""
+
+        with open("storage.json", "r") as file:
+            data = json.load(file)
+        data["player_count"] = self.player_count
+        data["pick_count"] = self.pick_count
+        data["players"] = [{"username": player.username,
+                            "user_id": player.user_id}
+                           for player in self.players]
+        data["draft_fired"] = self.draft_fired
+        data["setup"] = self.setup
+        data["format"] = self.format
+        data["picks"] = [{"username": player.username,
+                          "user_id": player.user_id,
+                          "picks": self.picks[player]}
+                         for player in self.picks]
+        data["prepicks"] = [{"username": player.username,
+                             "user_id": player.user_id,
+                             "prepicks": self.prepicks[player]}
+                            for player in self.prepicks]
+        data["active_player_index"] = self.active_player_index
+        data["row"] = self.row
+        data["column"] = self.column
+        data["row_move"] = self.row_move
+        data["column_move"] = self.column_move
+        data["picks_remaining"] = self.picks_remaining
+        data["snake_player_list"] = [{"username": player.username,
+                                      "user_id": player.user_id}
+                                     for player in self.snake_player_list]
+
+        with open("storage.json", "w") as file:
+            json.dump(data, file)
+
+    def reload(self):
+        """This loads in stored data from a json file to
+        restore a draft to a previous stage."""
+
+        with open("storage.json", "r") as file:
+            data = json.load(file)
+        self.player_count = data["player_count"]
+        self.pick_count = data["pick_count"]
+        self.players = [Player(player["username"], player["user_id"]) for player in data["players"]]
+        self.draft_fired = data["draft_fired"]
+        self.setup = data["setup"]
+        self.format = data["format"]
+
+        self.picks = {Player(player["username"], player["user_id"]): player["picks"]
+                      for player in data["picks"]}
+        self.prepicks = {Player(player["username"], player["user_id"]): player["prepicks"]
+                         for player in data["prepicks"]}
+        self.active_player_index = data["active_player_index"]
+        self.row = data["row"]
+        self.column = data["column"]
+        self.row_move = data["row_move"]
+        self.column_move = data["column_move"]
+        self.picks_remaining = data["picks_remaining"]
+        self.snake_player_list = [Player(player["username"], player["user_id"])
+                                  for player in data["snake_player_list"]]

@@ -1,8 +1,5 @@
 import discord
 from discord.ext import commands
-from decouple import config
-import sys
-sys.path.append('..')
 from botBackend.draft_logic import DraftLogic
 from botBackend.screenshot import take_screenshot
 
@@ -147,7 +144,8 @@ class DraftLogicCommands(commands.Cog):
         await ctx.send(embed=embed)
 
         # if it was in dm's and a sucessful pick, make sure it also goes public
-        if isinstance(ctx.channel, discord.channel.DMChannel) and self.logic.picks_remaining < before:
+        if (isinstance(ctx.channel, discord.channel.DMChannel)
+                and self.logic.picks_remaining < before):
             await ctx.send(embed=embed)
 
         # if we have reached the end of the draft.
@@ -211,6 +209,20 @@ class DraftLogicCommands(commands.Cog):
         embed = discord.Embed(description=description, colour=discord.Color.blue())
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=['Reload'])
+    async def reload(self, ctx):
+
+        """Reloads the draft back to the last saved point."""
+
+        if isinstance(ctx.channel, discord.channel.DMChannel):
+            description = "Cannot reload draft over DM's."
+        else:
+            self.logic.reload()
+            description = "The draft has been reloaded to the previous save state."
+
+        embed = discord.Embed(description=description, colour=discord.Color.blue())
+        await ctx.send(embed=embed)
+
     ############################
     ###   HELPER FUNCTIONS   ###
     ############################
@@ -238,5 +250,5 @@ class DraftLogicCommands(commands.Cog):
                 pass
 
 
-def setup(bot):
-    bot.add_cog(DraftLogicCommands(bot))
+async def setup(bot):
+    await bot.add_cog(DraftLogicCommands(bot))

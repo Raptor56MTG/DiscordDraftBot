@@ -48,5 +48,5 @@ class ScryfallCommands(commands.Cog):
             await ctx.send(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(ScryfallCommands(bot))
+async def setup(bot):
+    await bot.add_cog(ScryfallCommands(bot))
