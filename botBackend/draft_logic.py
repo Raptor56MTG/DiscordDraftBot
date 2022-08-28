@@ -593,9 +593,6 @@ class DraftLogic():
         with open("storage.json", "w") as file:
             json.dump(data, file)
 
-        with open("storage.json", 'r') as f:
-            print(f.read())
-
     def reload(self):
         """This loads in stored data from a json file to
         restore a draft to a previous stage."""
