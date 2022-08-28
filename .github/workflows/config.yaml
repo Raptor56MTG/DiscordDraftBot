@@ -1,5 +1,8 @@
 on: [push]
 
+env:
+  DOCS_LINK: ${{secrets.DOCS_LINK}}
+
 jobs:
   build:
 
