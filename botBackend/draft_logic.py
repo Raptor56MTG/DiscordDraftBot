@@ -372,8 +372,8 @@ class DraftLogic():
         if card_json["name"] in [cards for picks in self.picks.values() for cards in picks]:
             return "That card has already been chosen. Please try again."
 
-        if (self.format != "freeform" and card_json["legalities"][self.format] == "banned" or
-           card_json["legalities"][self.format] == "not_legal"):
+        if (self.format != "freeform" and (card_json["legalities"][self.format] == "banned" or
+           card_json["legalities"][self.format] == "not_legal")):
             return f"This card is not legal in {self.format}."
 
         return None
@@ -502,8 +502,8 @@ class DraftLogic():
         if card_json["object"] == "error":
             return "This card does not exist."
 
-        if (self.format != "freeform" and card_json["legalities"][self.format] == "banned" or
-           card_json["legalities"][self.format] == "not_legal"):
+        if (self.format != "freeform" and (card_json["legalities"][self.format] == "banned" or
+           card_json["legalities"][self.format] == "not_legal")):
             return f"This card is not legal in {self.format}."
 
         # used list comprehension here to combine all the lists

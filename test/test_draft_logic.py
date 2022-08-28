@@ -2036,7 +2036,7 @@ class TestDraftLogic(unittest.TestCase):
             self.assertEqual(logic.column, 2)
             self.assertEqual(logic.row_move, [])
             self.assertEqual(logic.column_move, [])
-            self.assertEqual(logic.picks_remaining, [])
+            self.assertEqual(logic.picks_remaining, 0)
             self.assertEqual(logic.snake_player_list, [])
 
 
