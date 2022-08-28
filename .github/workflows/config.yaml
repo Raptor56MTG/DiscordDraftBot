@@ -10,9 +10,6 @@ jobs:
         python-version: ["3.10"]
 
     steps:
-      - name: Setup environment variables
-          env: # Or as an environment variable
-            SUPER_SECRET: ${{ secrets.DOCS_LINK }}
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
