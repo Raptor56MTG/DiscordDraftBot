@@ -34,7 +34,3 @@ def load():
     file_location = '../storage.json'
 
     client.download_file(bucket, file, file_location)
-
-
-if __name__ == '__main__':
-    load()
