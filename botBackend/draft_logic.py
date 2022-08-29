@@ -603,6 +603,11 @@ class DraftLogic():
         # load in the json object from the amazon s3 bucket.
         backup.load()
 
+        print("before")
+
+        with open("storage.json", "r") as f:
+            print(f.read())
+
         with open("storage.json", "r") as file:
             data = json.load(file)
         self.player_count = data["player_count"]
@@ -624,3 +629,8 @@ class DraftLogic():
         self.picks_remaining = data["picks_remaining"]
         self.snake_player_list = [Player(player["username"], player["user_id"])
                                   for player in data["snake_player_list"]]
+
+        print("after")
+
+        with open("storage.json", "r") as f:
+            print(f.read())
