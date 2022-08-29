@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from decouple import config
 import random
 import json
-from botBackend import scryfallapi
-from botBackend import sheetapi
+from botBackend import scryfallapi, sheetapi, backup
 
 
 @dataclass(frozen=True)
@@ -593,9 +592,16 @@ class DraftLogic():
         with open("storage.json", "w") as file:
             json.dump(data, file)
 
+        # back up the copy of the file to the S3 bucket
+        # as heroku files do not persist upon restart.
+        backup.upload()
+
     def reload(self):
         """This loads in stored data from a json file to
         restore a draft to a previous stage."""
+
+        # load in the json object from the amazon s3 bucket.
+        backup.load()
 
         with open("storage.json", "r") as file:
             data = json.load(file)
