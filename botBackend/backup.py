@@ -37,6 +37,6 @@ def load():
 
     print("preparing to download")
 
-    client.download_file(bucket, file, file_location)
+    print(client.download_file(bucket, file, file_location))
 
     print("downloaded the file")
