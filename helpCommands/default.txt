@@ -51,7 +51,10 @@ Here are my commands and their parameters:
     - Reminds a user to pick a card when the draft
       has fired and is running.
 
-17. setup
+17. reload
+    - Reloads in draft data.
+
+18. setup
     - Sets up a draft with a specified player and pick count.
 
 Type !help {command} for more info on a command.```

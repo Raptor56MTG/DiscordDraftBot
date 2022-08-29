@@ -48,7 +48,9 @@ class TestHelpCommands(unittest.TestCase):
                     "16. remind\n" +
                     "    - Reminds a user to pick a card when the draft\n" +
                     "      has fired and is running.\n\n" +
-                    "17. setup\n" +
+                    "17. reload\n" +
+                    "    - Reloads in draft data.\n\n" +
+                    "18. setup\n" +
                     "    - Sets up a draft with a specified player and pick count.\n\n" +
                     "Type !help {command} for more info on a command.```")
 
