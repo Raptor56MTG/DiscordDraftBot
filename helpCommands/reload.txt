@@ -1,0 +1,8 @@
+```
+reload
+
+This reloads in the data for the draft if heroku happens
+to restart the dyno.
+
+    example: !reload
+    - Reloads the draft back to the previous save state.```
