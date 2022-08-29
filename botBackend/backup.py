@@ -25,6 +25,8 @@ def load():
     s3 bucket, and allows for the draft to pick up from where
     it left off."""
 
+    print("in load function")
+
     client = boto3.client('s3',
                           aws_access_key_id=config('ACCESS_KEY'),
                           aws_secret_access_key=config('SECRET_ACCESS_KEY'))
@@ -34,3 +36,6 @@ def load():
     file_location = '../storage.json'
 
     client.download_file(bucket, file, file_location)
+
+    print("downloaded the file")
+
