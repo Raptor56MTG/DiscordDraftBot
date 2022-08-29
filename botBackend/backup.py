@@ -35,7 +35,8 @@ def load():
     file = '/storage/storage.json'
     file_location = '../storage.json'
 
+    print("preparing to download")
+
     client.download_file(bucket, file, file_location)
 
     print("downloaded the file")
-
