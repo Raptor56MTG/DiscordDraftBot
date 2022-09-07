@@ -25,18 +25,11 @@ def load():
     s3 bucket, and allows for the draft to pick up from where
     it left off."""
 
-    print("in load function")
-
     client = boto3.client('s3',
                           aws_access_key_id=config('ACCESS_KEY'),
                           aws_secret_access_key=config('SECRET_ACCESS_KEY'))
 
     bucket = 'discord-draft-bot'
     file = '/storage/storage.json'
-    file_location = '../storage.json'
-
-    print("preparing to download")
-
-    print(client.download_file(bucket, file, file_location))
-
-    print("downloaded the file")
+    file_location = 'storage.json'
+    client.download_file(bucket, file, file_location)
