@@ -12,7 +12,7 @@ def notify(hours: str, minutes: str, seconds: str) -> str:
     s = f'{int(seconds)} seconds.' if seconds != "1" else f'{int(seconds)} second.'
 
     # setup embed to confirm with user
-    return "I will remind you in: " + h + m + s
+    return "I will not remind you in: " + h + m + s
 
 
 async def remind(hours: str, minutes: str, seconds: str, mention: str) -> str:
