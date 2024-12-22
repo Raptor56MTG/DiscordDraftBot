@@ -5,13 +5,12 @@ This is the code for the DraftBot Discord Bot used to play Rotissare Drafts.
 ## Important Information / Common questions
 
 ### What does this bot do?
-
-   The goal of this bot is to fully automate a rotisserie draft. This includes
-   picking cards, generating decklists, and taking a screenshot of the finished
-   draft.
+The goal of this bot is to fully automate a rotisserie draft. This includes
+picking cards, generating decklists, and taking a screenshot of the finished
+draft.
 
 ### Can this bot run in multiple servers at the same time?
-   Unfourtunatly it cannot. This bot is intended to be run in one server only. This is due to the limitations that come with accessing a google sheet. If you want this bot to run in multiple servers, you will need to create a new bot instance and credentials for each server.
+This bot is intended to be run in one server only. This is due to the limitations that come with accessing a google sheet. If you want this bot to run in multiple servers, you will need to create a new bot instance and credentials for each server.
    
 ## Possible hiccups / Things to keep in mind during setup
 
